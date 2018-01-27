@@ -13,7 +13,7 @@ public class IndexController {
   @RequestMapping("/")
   public String index() {
     logger.info("Loading home page.");
-    return "index";
+    return "register";
   }
 
 }
