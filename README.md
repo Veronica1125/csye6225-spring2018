@@ -1,1 +1,1 @@
-# CSYE 6225 Spring 2018 Starter Repository
+# csye6225-spring2018
