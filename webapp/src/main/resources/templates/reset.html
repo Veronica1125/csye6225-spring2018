@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/header :: header"/>
+<body>
+<div th:replace="fragments/navigation :: navigation"/>
+<head>
+    <link rel="stylesheet" href="some.css" type="text/css" />
+    <style>
+        form{
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 550px;
+            background: white;
+            padding: 50px 50px 50px 50px;
+            font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: #CCCCCC;
+            /*text-shadow: 1px 1px 1px #444;*/
+            border: none;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            box-shadow: 3px 3px 3px grey;
+        }
+
+        form label {
+            display: block;
+            margin: 0px 0px 5px;
+        }
+
+        form label>span {
+            float: left;
+            width: 20%;
+            text-align: right;
+            padding-right: 10px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: black;
+        }
+
+        form input[type="password"], form textarea, form select{
+            border: none;
+            color: black;
+            height: 30px;
+            line-height:15px;
+            margin-bottom: 16px;
+            margin-right: 6px;
+            margin-top: 2px;
+            outline: 0 none;
+            padding: 5px 0px 5px 5px;
+            width: 70%;
+            border-radius: 2px;
+            -webkit-border-radius: 2px;
+            -moz-border-radius: 2px;
+            -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            background: #f9f7f9;
+        }
+
+        form textarea{
+            height:200px;
+            padding: 5px 0px 0px 5px;
+            width: 70%;
+            border: 1px;
+            border-color: black;
+        }
+
+        form input[type="Submit"]{
+            background: black;
+            border: none;
+            padding: 5px 25px 5px 25px;
+            color: white;
+            border-radius: 4px;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            font-weight: bold;
+            -webkit-box-shadow:1px 1px 1px #3D3D3D;
+            -moz-box-shadow:1px 1px 1px #3D3D3D;
+            margin-left: 220px;
+        }
+
+
+        form input[type="Submit"]:hover {
+            color: #333;
+            background-color: #EBEBEB;
+        }
+
+        a{
+            color: black;
+        }
+
+        a:hover {
+            color: grey;
+        }
+    </style>
+
+</head>
+<form id="myForm" action="" method="post">
+    <label><span>New Password: </span><input type="password" name="password"/></label>
+    <br/>
+    <label><span>Confirm Password:</span><input type="password" name="confirm"/></label>
+    <br/>
+
+    <label><input type="Submit" name="Submit" value="continue"/></label>
+
+</form>
+
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

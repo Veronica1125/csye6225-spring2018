@@ -46,6 +46,4 @@ public class IndexController {
 //    public String logout(){
 //        return "redirect:/login";
 //    }
-
-
 }
