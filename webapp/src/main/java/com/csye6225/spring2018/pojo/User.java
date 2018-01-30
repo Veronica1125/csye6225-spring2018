@@ -11,10 +11,16 @@ public class User {
     @Id
     @Column(name ="email")
     private String email;
+
     @Column(name = "password")
     private String password;
+
+    @Column(name = "confirmPassword")
+    private String confirmPassword;
+
     @Column(name = "nickname")
     private String nickName;
+
 
     public String getEmail() {
         return email;
@@ -39,6 +45,12 @@ public class User {
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
-    //private ??? profilePhoto;
 
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
 }

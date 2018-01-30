@@ -92,12 +92,15 @@
     </style>
 
 </head>
-<form id="myForm" action="" method="post">
-    <label><span>New Password: </span><input type="password" name="password"/></label>
+
+<form id="myForm" th:action="@{/reset}"  method="post">
+    <label>Change Password</label>
+    <br/>
+    <label><span>New Password: </span><input type="password"  name="password"/></label>
     <br/>
     <label><span>Confirm Password:</span><input type="password" name="confirm"/></label>
     <br/>
-
+    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
     <label><input type="Submit" name="Submit" value="continue"/></label>
 
 </form>
