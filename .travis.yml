@@ -2,14 +2,14 @@ language: java
 jdk:
 - openjdk8
 
+
 sudo: false
 install: true
 
 script:
-- cd webapp
-- ./gradlew war
+  - ./webapp/gradlew build
 
 notifications:
-email:
-recipients:
+  username:
+    recipients:
 - li.xiao5@husky.neu.edu
