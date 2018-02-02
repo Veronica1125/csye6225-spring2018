@@ -6,9 +6,10 @@ sudo: false
 install: true
 
 script:
-- ./gradlew build
+- cd webapp
+- ./gradlew war
 
 notifications:
-username:
+email:
 recipients:
 -zhang.yichu@husky.neu.edu
