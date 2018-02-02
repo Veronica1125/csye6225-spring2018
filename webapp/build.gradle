@@ -24,6 +24,7 @@ repositories {
     mavenCentral()
 }
 
+
 configurations {
     providedRuntime
 }
@@ -55,9 +56,11 @@ dependencies {
     compile('org.apache.httpcomponents:httpclient:+')
     compile('com.google.code.gson:gson:+')
 
+    compile('org.apache.tomcat.embed:tomcat-embed-jasper')
 
     runtime('org.springframework.boot:spring-boot-devtools')
     runtime('mysql:mysql-connector-java')
+
 
     providedRuntime('org.springframework.boot:spring-boot-starter-tomcat')
 
