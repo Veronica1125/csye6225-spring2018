@@ -1,21 +1,41 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <script>
+
+        function mytime(){
+            var a = new Date();
+            var b = a.toLocaleTimeString();
+            var c = a.toLocaleDateString();
+            document.getElementById("time1").innerHTML = c+"&nbsp;"+b;
+        }
+        setInterval(function() {mytime()},1000);
+
+    </script>
+</head>
+
 <div th:replace="fragments/header :: header"/>
 <body>
 <div th:replace="fragments/navigation :: navigation"/>
 
-
-<!-- Page Content -->
 <div class="container">
-            <p>
-                Welcome to CSYE 6225 Spring 2018 Semester!!!
-            </p>
-    
+    <p>
+        Welcome to CSYE 6225 Spring 2018 Semester!!! |
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" name="submit" value="logout" class="button"/>
+        </form>
+        <a href="reset">Reset Password</a>
+
+    </p>
+
+    <p id="time1" style="color: blueviolet;"></p>
+
+
+
 </div>
 <!-- /.container -->
 
 <div th:replace="fragments/footer :: footer"/>
 </body>
 </html>
-
-
