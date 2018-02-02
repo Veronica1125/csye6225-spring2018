@@ -1,0 +1,15 @@
+language: java
+jdk:
+- openjdk8
+
+sudo: false
+install: true
+
+script:
+- cd webapp
+- ./gradlew war
+
+notifications:
+email:
+recipients:
+- li.xiao5@husky.neu.edu
