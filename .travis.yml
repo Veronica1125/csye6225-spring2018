@@ -1,28 +1,14 @@
 language: java
 jdk:
-<<<<<<< HEAD
-- oraclejdk8
-=======
 - openjdk8
->>>>>>> adf4684ace4407d881be3837b14827e61de76910
 
 sudo: false
 install: true
 
 script:
-<<<<<<< HEAD
   - ./webapp/gradlew build
 
 notifications:
   username:
     recipients:
       - zhang.yichu@husky.neu.edu
-=======
-- cd webapp
-- ./gradlew war
-
-notifications:
-email:
-recipients:
--zhang.yichu@husky.neu.edu
->>>>>>> adf4684ace4407d881be3837b14827e61de76910
