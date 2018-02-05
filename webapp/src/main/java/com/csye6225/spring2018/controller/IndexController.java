@@ -85,6 +85,7 @@ public class IndexController {
         }
         String password = user.getPassword();
         user.setPassword(bCryptPasswordEncoder().encode(password));
+        user.setConfirmPassword(null);
         userRepository.save(user);
         return "redirect: /";
     }

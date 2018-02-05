@@ -108,18 +108,18 @@
     <br/>
     <label>
         <span>Email Address:</span>
-        <input type="text" th:field="*{email}" name="username"/>
+        <input type="text" th:field="*{email}" name="email"/>
     </label>
     <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="validation-message alert alert-danger" role="alert"></div>
     <br/>
     <label><span>Password: </span><input type="password" th:field="*{password}" name="password"/></label>
     <br/>
     <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="validation-message alert alert-danger" role="alert"></div>
-    <label><span>Confirm Password:</span><input type="password" th:field="*{confirmPassword}" name="confirm"/></label>
+    <label><span>Confirm Password:</span><input type="password" th:field="*{confirmPassword}" name="confirmPassword"/></label>
     <br/>
     <div th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="validation-message alert alert-danger" role="alert"></div>
     <!--<label><input type="Button" name="Button" value="reset"/></label>-->
-    <label><input type="Submit" name="Submit" value="signup"/></label>
+    <label><input type="Submit" name="submit" value="signup"/></label>
 
 </form>
 

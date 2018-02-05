@@ -42,8 +42,7 @@ public class UserValidator implements Validator {
         if(user.getEmail()!= null && !validateEmail(user.getEmail())){
             errors.rejectValue("email", "invalidEmail", "please provide valid email address!");
         }
-//        System.out.println("ps: "+ user.getPassword()+" c ps: "+user.getConfirmPassword());
-//        System.out.println("equal? "+user.getPassword().equals(user.getConfirmPassword()));
+
         if(user.getConfirmPassword()!= null && !user.getConfirmPassword().equals(user.getPassword())){
             errors.rejectValue("confirmPassword", "error.passwordMismatch","confirmed password does not match!");
         }
