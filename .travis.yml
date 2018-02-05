@@ -11,4 +11,4 @@ script:
 notifications:
   username:
     recipients:
-      - li.xiao5@husky.neu.edu
+      - zhang.yichu@husky.neu.edu
