@@ -2,7 +2,6 @@ language: java
 jdk:
 - openjdk8
 
-
 sudo: false
 install: true
 
@@ -12,4 +11,5 @@ script:
 notifications:
   username:
     recipients:
-- yuan.yang@husky.neu.edu
+      - yuan.yang@husky.neu.edu
+
