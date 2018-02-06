@@ -13,3 +13,7 @@
 <ul>
 	<li>Delete the stack and all networking resources. Script should take STACK_NAME as parameter</li>
 </ul>
+<p>"csye6225-cf-networking.json"</p>
+<ul>
+	<li>The cloudFormation template for this stack</li>
+</ul>
