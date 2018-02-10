@@ -7,7 +7,7 @@ install: true
 
 script:
   - ./webapp/gradlew build
-  - ./webapp/src/gradlew test
+  - ./webapp/gradlew test
 
 notifications:
   username:
