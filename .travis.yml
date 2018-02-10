@@ -7,7 +7,7 @@ install: true
 
 script:
   - ./webapp/gradlew build
-  - webapp/gradle test -Dtest.single=ApplicationTest
+  - ./webapp/gradlew test -Dtest.single=ApplicationTest
 notifications:
   username:
     recipients:
