@@ -6,8 +6,8 @@ sudo: false
 install: true
 
 script:
-  - ./webapp/gradlew build
-  - ./webapp/gradlew test -Dtest.single=ApplicationTest
+  - ./gradlew build
+  - gradlew test -Dtest.single=ApplicationTest
 notifications:
   username:
     recipients:
