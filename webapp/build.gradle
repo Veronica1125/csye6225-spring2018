@@ -69,6 +69,14 @@ dependencies {
     testCompile('org.springframework.security:spring-security-test')
 }
 
+sourceSets {
+    test {
+        java {
+            srcDirs = ["test/java"]
+        }
+    }
+}
+
 war {
     archiveName = 'ROOT.war'
 }
