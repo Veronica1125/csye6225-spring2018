@@ -67,20 +67,7 @@ dependencies {
     testCompile('io.rest-assured:rest-assured:3.0.3')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
-    testCompile('junit:junit:4.11')
-    testCompile('org.mockito:mockito-core:1.+')
 }
-task test {
-    useJUnit{
-        includeCategories('com.testwithspring.master.UnitTest')
-    }
-
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-
-}
-
 
 war {
     archiveName = 'ROOT.war'
