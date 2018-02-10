@@ -72,7 +72,7 @@ dependencies {
 sourceSets {
     test {
         java {
-            srcDirs = ["test/java"]
+            srcDirs = ['test/java']
         }
     }
 }
