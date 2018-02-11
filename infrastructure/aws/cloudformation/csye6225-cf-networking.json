@@ -1,22 +1,57 @@
 {
 
-  "Description" : "This template shows how to create a VPC, Internet Gateway, to attach the Internet Gateway to VPC; to create a public Route Table and create a route in route table.",
-  
-
   "Resources" : {
+    "EC2Instance":{
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : "t2.micro",
+        "ImageId" : "ami-66506c1c",
+        "DisableApiTermination" : "true",
+	"KeyName" : "csye6225.pub",
+	"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+	"BlockDeviceMappings" : [
+	  {
+	    "DeviceName" : "/dev/sda1",
+	    "Ebs" : {
+		"VolumeSize" : "16",
+		"VolumeType" : "gp2"
+	    }
+	  }
+	]
+      }
+    },
+
+    "InstanceSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Enable SSH access via port 22",
+        "SecurityGroupIngress" : [ {
+          "IpProtocol" : "tcp",
+          "FromPort" : "22",
+          "ToPort" : "22",
+          "CidrIp" : "0.0.0.0/0"
+        } ]
+      }
+    },	
 
     "VPC" : {
       "Type" : "AWS::EC2::VPC",
       "Properties" : {
         "CidrBlock" : "10.0.0.0/16",
-        "Tags" : [ {"Key" : "Name", 
-		    "Value": {"Ref" : "AWS::StackName" }} ] } },
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+		   {"Key" : "Name", "Value" : {"Ref" : "AWS::StackName"} }		
+		 ]
+      }
+    },
 
     "InternetGateway" : {
       "Type" : "AWS::EC2::InternetGateway",
       "Properties" : {
-        "Tags" : [ {"Key" : "Name", 
-		    "Value": {"Ref" : "AWS::StackName" }} ]  } },
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} }, 
+		   {"Key" : "Name", "Value" : {"Ref" : "AWS::StackName"} }
+		 ]
+      }
+    },
 
     "AttachGateway" : {
        "Type" : "AWS::EC2::VPCGatewayAttachment",
@@ -30,8 +65,11 @@
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
         "VpcId" : {"Ref" : "VPC"},
-        "Tags" : [ {"Key" : "Name", 
-		    "Value": {"Ref" : "AWS::StackName" }} ]  } },
+        "Tags" : [ {"Key" : "Name", "Value" : { "Ref" : "AWS::StackId"} },
+		   {"Key" : "Name", "Value" : {"Ref" : "AWS::StackName"} }	
+		 ]
+      }
+    },
 
     "Route" : {
       "Type" : "AWS::EC2::Route",
@@ -42,5 +80,5 @@
         "GatewayId" : { "Ref" : "InternetGateway" }
       }
     }
-  }
+ }
 }
