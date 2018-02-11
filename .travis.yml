@@ -1,0 +1,19 @@
+language: java
+jdk:
+- openjdk8
+
+sudo: false
+install: true
+
+script:
+  - cd webapp
+  - ./gradlew build
+  - ./gradlew war
+  - gradle -Dtest.single=ApplicationTest test
+
+notifications:
+  username:
+    recipients:
+      - li.xiao5@husky.neu.edu
+    on_success: always
+    on_failure: always
