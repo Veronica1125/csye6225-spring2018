@@ -6,11 +6,13 @@ sudo: false
 install: true
 
 script:
-  - cd webapp
-  - ./gradlew build
-  - ./gradlew war
-  - gradle -Dtest.single=ApplicationTest test
+- cd webapp
+- ./gradlew war
+
 notifications:
   username:
     recipients:
-      - zhang.yichu@husky.neu.edu
+      - li.xiao5@husky.neu.edu
+    on_success: always
+    on_failure: always
+
