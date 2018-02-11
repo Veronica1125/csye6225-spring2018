@@ -15,3 +15,4 @@ notifications:
       - li.xiao5@husky.neu.edu
     on_success: always
     on_failure: always
+

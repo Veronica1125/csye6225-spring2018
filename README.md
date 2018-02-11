@@ -15,7 +15,7 @@
 <ul>
   <li>Jmeter</li>
 </ul>
-<p>Integeritation</p>
+<p>Integration</p>
 <ul>
   <li>Travis CI</li>
 </ul>
