@@ -1,7 +1,7 @@
 # Instructions to Run the Script
 <p>"csye6225-aws-networking-setup.sh" Script will</p>
 <ul>
-	<li>create and configure required networking resources using AWS CLI. Script should take STACK_NAME as parameter</li>
+	<li>Create and configure required networking resources using AWS CLI. Script should take STACK_NAME as parameter</li>
 	<li>Create a Virtual Private Cloud (VPC) resource called STACK_NAME-csye6225-vpc</li>
 	<li>Create Internet Gateway resource called STACK_NAME-csye6225-InternetGateway</li>
 	<li>Attach the Internet Gateway to STACK_NAME-csye6225-vpc VPC</li>
@@ -10,5 +10,5 @@
 </ul>
 <p>"csye6225-aws-networking-teardown.sh" Script will</p>
 <ul>
-	<li>delete networking resources using AWS CLI. Script should take STACK_NAME as parameter</li>
+	<li>Delete networking resources using AWS CLI. Script should take STACK_NAME as parameter</li>
 </ul>
