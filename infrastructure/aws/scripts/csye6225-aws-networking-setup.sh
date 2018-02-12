@@ -1,7 +1,9 @@
 set -e
+
 #Author: Yang Yuan
 echo "Author: Yang Yuan"
 echo "        yuan.yang@husky.neu.edu"
+
 #Usage: setting up our networking resources such as Virtual Private Cloud (VPC), Internet Gateway, Route Table and Routes
 
 #Arguments: STACK_NAME
