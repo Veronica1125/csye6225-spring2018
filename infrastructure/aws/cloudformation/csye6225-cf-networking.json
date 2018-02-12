@@ -1,3 +1,4 @@
+
 {
 
   "Resources" : {
@@ -11,7 +12,7 @@
 		 ]
       }
 },
-"InternetGateway" : {
+   "InternetGateway" : {
       "Type" : "AWS::EC2::InternetGateway",
       "Properties" : {
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} }, 
@@ -27,7 +28,7 @@
          "InternetGatewayId" : { "Ref" : "InternetGateway" }
        }
     },
- "RouteTable" : {
+   "RouteTable" : {
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
         "VpcId" : {"Ref" : "VPC"},

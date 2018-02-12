@@ -11,5 +11,4 @@ script:
 notifications:
   username:
     recipients:
-      - yuan.yang@husky.neu.edu
-
+      - zhang.yichu@husky.neu.edu
