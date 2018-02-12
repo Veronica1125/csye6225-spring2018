@@ -69,6 +69,12 @@ dependencies {
     testCompile('org.springframework.security:spring-security-test')
 }
 
+test{
+    testLogging{
+        events 'started','passed'
+    }
+}
+
 war {
     archiveName = 'ROOT.war'
 }
