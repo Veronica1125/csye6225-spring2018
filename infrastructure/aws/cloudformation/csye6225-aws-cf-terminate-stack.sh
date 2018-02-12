@@ -1,7 +1,9 @@
 set -e
-#Author Xiao Li
-echo "Author: Xiao Li"
-echo "		li.xiao5@husky.neu.edu"
+
+#Author Yang Yuan
+echo "Author: Yang Yuan"
+echo "		yuan.yang@husky.neu.edu"
+
 
 STACK_NAME=$1
 echo "The stack you want to delete: "
@@ -11,6 +13,7 @@ aws cloudformation describe-stacks --stack-name $STACK_NAME
 
 #Delete the cloudformation stack
 aws cloudformation delete-stack --stack-name $STACK_NAME
+
 
 #Job Done
 echo "Job done!"

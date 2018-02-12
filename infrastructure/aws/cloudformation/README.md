@@ -1,3 +1,4 @@
+
 #Instructions to Run the Script
 
 "csye6225-aws-cf-create-stack.sh" Script will
