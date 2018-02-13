@@ -1,0 +1,37 @@
+{
+
+  "Resources" : {
+    "EC2Instance":{
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "InstanceType" : "t2.micro",
+        "ImageId" : "ami-66506c1c",
+        "DisableApiTermination" : "true",
+	"KeyName" : "csye6225.pub",
+	"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+	"BlockDeviceMappings" : [
+	  {
+	    "DeviceName" : "/dev/sda1",
+	    "Ebs" : {
+		"VolumeSize" : "16",
+		"VolumeType" : "gp2"
+	    }
+	  }
+	]
+       }
+      },
+      "InstanceSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Enable SSH access via port 22",
+        "SecurityGroupIngress" : [ {
+          "IpProtocol" : "tcp",
+          "FromPort" : "22",
+          "ToPort" : "22",
+          "CidrIp" : "0.0.0.0/0"
+        } ]
+      }
+    }
+
+    }
+}

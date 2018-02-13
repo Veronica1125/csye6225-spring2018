@@ -1,8 +1,8 @@
 set -e
 
 #Author: Xiao Li
-echo "Author: Yang Yuan"
-echo "        yuan.yang@husky.neu.edu"
+echo "Author: Xiao Li"
+echo "        li.xiao5@husky.neu.edu"
 #Usage: setting up our networking resources such as Virtual Private Cloud (VPC), Internet Gateway, Route Table and Routes using AWS Cloud Formation
 
 STACK_NAME=$1
