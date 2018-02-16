@@ -10,12 +10,16 @@ branches:
   - lab
 
 script:
+  - pwd
   - cd webapp
   - ./gradlew war
+  - cd ..
+  - pwd
+  - ls -al
 
 after_success:
  - mkdir codedeploy
- - zip -r lab-$TRAVIS_JOB_NUMBER.zip build/libs/ROOT.war infrastructure/aws/codedeploy/ appspec.yml
+ - zip -r lab-$TRAVIS_JOB_NUMBER.zip webapp/build/libs/ROOT.war infrastructure/aws/codedeploy/ appspec.yml
  - ls -al
  - mv lab-$TRAVIS_JOB_NUMBER.zip codedeploy/
  - ls -al
@@ -25,3 +29,14 @@ after_success:
  - pwd
  - cd ..
  - pwd
+
+deploy:
+ - provider: s3
+   local_dir: codedeploy
+   bucket: code-deploy.csye6225.com
+   region: us-east-1
+   skip_cleanup: true
+   access_key_id: $access_key_id
+   secret_access_key: $secret_access_key
+   on:
+     branch: lab 
