@@ -34,10 +34,25 @@ gatewayId=`aws ec2 describe-internet-gateways --filter "Name=tag:Name,Values=${S
 #Rename Internet Gateway
 aws ec2 create-tags --resources $gatewayId --tags Key=Name,Value=$STACK_NAME-csye6225-InternetGateway
 
-#Find Route Table
-routeTableId=`aws ec2 describe-route-tables --filter "Name=tag:Name,Values=${STACK_NAME}" --query 'RouteTables[*].{id:RouteTableId}' --output text` 
-#Rename Route Table
-aws ec2 create-tags --resources $routeTableId --tags Key=Name,Value=$STACK_NAME-csye6225-public-route-table
+#Find Public Route Table
+routeTableId1=`aws ec2 describe-route-tables --filter "Name=tag:Name,Values=${STACK_NAME}" --query 'RouteTables[*].{id:RouteTableId}' --output text` 
+#Rename Public Route Table
+aws ec2 create-tags --resources $routeTableId1 --tags Key=Name,Value=$STACK_NAME-csye6225-public-route-table
+
+#Find Private Route Table
+routeTableId2=`aws ec2 describe-route-tables --filter "Name=tag:Name,Values=${STACK_NAME}" --query 'RouteTables[*].{id:RouteTableId}' --output text`
+#Rename Private Route Table
+aws ec2 create-tags --resources $routeTableId2 --tags Key=Name,Value=$STACK_NAME-csye6225-private-route-table
+
+#Find Public Subnet
+subnetId1=`aws ec2 create-subnet --vpc-id $vpcId --cidr-block 10.0.0.0/24 --query 'Subnet.SubnetId' --output text`
+#Rename Public Subnet
+aws ec2 create-tags --resources $subnetId1 --tags Key=Name,Value=$STACK_NAME-csye6225-public-subnet
+
+#Find Private Subnet
+subnetId2=`aws ec2 create-subnet --vpc-id $vpcId --cidr-block 10.0.1.0/24 --query 'Subnet.SubnetId' --output text`
+#Rename Private Subnet
+aws ec2 create-tags --resources $subnetId2 --tags Key=Name,Value=$STACK_NAME-csye6225-private-subnet
 
 #Job Done!
 echo "Job Done!"

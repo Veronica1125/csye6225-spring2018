@@ -7,7 +7,9 @@ echo "	      li.xiao5@husky.neu.edu"
 STACK_NAME=$1
 
 #Create Stack
+
 aws cloudformation create-stack --stack-name $STACK_NAME --template-body file://csye6225-cf-application.json
+
 #Check Stack Status
 STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
 

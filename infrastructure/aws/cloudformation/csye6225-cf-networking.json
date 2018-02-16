@@ -1,13 +1,12 @@
-
 {
-
   "Resources" : {
+
     "VPC" : {
       "Type" : "AWS::EC2::VPC",
       "Properties" : {
         "CidrBlock" : "10.0.0.0/16",
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-		  {"Key" : "Name", "Value": {"Ref" :"AWS::StackName"} }		
+		  {"Key" : "Name", "Value" :{"Ref" :"AWS::StackName"} }		
 		 ]
       }
     },
@@ -29,7 +28,7 @@
        }
     },
 
-    "RouteTable" : {
+    "PublicRouteTable" : {
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
         "VpcId" : {"Ref" : "VPC"},
@@ -37,17 +36,61 @@
 		   {"Key" : "Name", "Value" : {"Ref" : "AWS::StackName"} }	
 		 ]
       }
+    }, 
+    
+    "PrivateRouteTable" : {
+      "Type" : "AWS::EC2::RouteTable",
+      "Properties" : {
+        "VpcId" : { "Ref" : "VPC" },
+        "Tags" : [
+          { "Key" : "Name", "Value" : { "Ref" : "AWS::StackId" } },
+          {"Key" : "Name", "Value" : {"Ref" : "AWS::StackName"} }
+        ]
+      }
     },
 
     "Route" : {
       "Type" : "AWS::EC2::Route",
       "DependsOn" : "AttachGateway",
       "Properties" : {
-        "RouteTableId" : { "Ref" : "RouteTable" },
+        "RouteTableId" : { "Ref" : "PublicRouteTable" },
         "DestinationCidrBlock" : "0.0.0.0/0",
         "GatewayId" : { "Ref" : "InternetGateway" }
       }
-    }
+    },
+
+    "PublicSubnet" : {
+      "Type" : "AWS::EC2::Subnet",
+      "Properties" : {
+        "VpcId" : { "Ref" : "VPC" },
+        "CidrBlock" : "10.0.0.0/24",
+        "Tags" : [ {"Key" : "Name", "Value" : { "Ref" : "AWS::StackId"} } ]
+      }
+    },
+
+    "PrivateSubnet" : {
+      "Type" : "AWS::EC2::Subnet",
+      "Properties" : {
+        "VpcId" : { "Ref" : "VPC" },
+        "CidrBlock" : "10.0.1.0/24",
+        "Tags" : [ {"Key" : "Name", "Value" : { "Ref" : "AWS::StackId"} } ]
+      }
+    },
+
+    "PublicSubnetRouteTableAssociation" : {
+      "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties" : {
+        "SubnetId" : { "Ref" : "PublicSubnet" },
+        "RouteTableId" : { "Ref" : "PublicRouteTable" }
+      }
+    },
+
+    "PrivateSubnetRouteTableAssociation" : {
+      "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties" : {
+        "SubnetId" : { "Ref" : "PrivateSubnet" },
+        "RouteTableId" : { "Ref" : "PrivateRouteTable" }
+      }
+    },
  }
 }
-
