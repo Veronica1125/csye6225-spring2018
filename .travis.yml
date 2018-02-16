@@ -10,7 +10,7 @@ branches:
   - lab
 
 script:
-  - ./gradlew build
+  - ./gradlew war
 
 after_success:
  - mkdir codedeploy
