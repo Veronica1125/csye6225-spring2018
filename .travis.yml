@@ -10,6 +10,7 @@ branches:
   - lab
 
 script:
+  - cd webapp
   - ./gradlew war
 
 after_success:
