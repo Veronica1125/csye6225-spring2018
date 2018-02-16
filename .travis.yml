@@ -14,9 +14,9 @@ script:
 
 after_success:
  - mkdir codedeploy
- - zip -r lab.zip build/libs/ROOT.war appspec.yml
+ - zip -r lab-$TRAVIS_JOB_NUMBER.zip build/libs/ROOT.war infrastructure/aws/codedeploy/ appspec.yml
  - ls -al
- - mv lab.zip codedeploy/
+ - mv lab-$TRAVIS_JOB_NUMBER.zip codedeploy/
  - ls -al
  - pwd
  - cd codedeploy
