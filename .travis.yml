@@ -1,21 +1,26 @@
-
 language: java
 jdk:
-- openjdk8
+- oraclejdk8
 
 sudo: false
 install: true
 
+branches:
+  only:
+  - lab
+
 script:
-  - cd webapp
   - ./gradlew build
-  - ./gradlew war
-  - gradle -Dtest.single=ApplicationTest test
 
-notifications:
-  username:
-    recipients:
-      - li.xiao5@husky.neu.edu
-    on_success: always
-    on_failure: always
-
+after_success:
+ - mkdir codedeploy
+ - zip -r lab.zip build/libs/ROOT.war appspec.yml
+ - ls -al
+ - mv lab.zip codedeploy/
+ - ls -al
+ - pwd
+ - cd codedeploy
+ - ls -al
+ - pwd
+ - cd ..
+ - pwd
