@@ -1,13 +1,14 @@
 set -e
-#Author Yang Yuan
-echo "Author: Yang Yuan"
-echo "	      yuan.yang@husky.neu.edu"
 
-#Usage: Taking STACK_NAME as parameter and building a vpc, internet gateway, route table and route through aws cloudformation
+#Author: Xiao Li
+echo "Author: Yang Yuan"
+echo "        yuan.yang@husky.neu.edu"
+#Usage: setting up our networking resources such as Virtual Private Cloud (VPC), Internet Gateway, Route Table and Routes using AWS Cloud Formation
 
 STACK_NAME=$1
 
-#Create Stack
+#Create Stack:
+
 aws cloudformation create-stack --stack-name $STACK_NAME --template-body file://csye6225-cf-networking.json
 
 #Check Stack Status
@@ -19,7 +20,7 @@ echo "Please wait..."
 while [ $STACK_STATUS != "CREATE_COMPLETE" ]
 do
 
-STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
+	STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
 
 done
 
