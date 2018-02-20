@@ -35,11 +35,10 @@ public class ApplicationTest {
 
     @MockBean
     private UserValidator userValidator;
-
-    @Test
+    
     public void shouldReturnHomePageMessage() throws Exception{
         this.mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string(containsString("Welcome to CSYE 6225 Spring 2018 Semester!!!")));
+                .andExpect(content().string(containsString("You have signed in.")));
 
     }
 
