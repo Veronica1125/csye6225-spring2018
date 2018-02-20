@@ -1,9 +1,6 @@
 package com.csye6225.spring2018.pojo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name ="user_info")
@@ -18,8 +15,15 @@ public class User {
     @Column(name = "confirmPassword")
     private String confirmPassword;
 
-    @Column(name = "nickname")
+    @Column(name = "nickName")
     private String nickName;
+
+    @Column(name = "aboutMe")
+    private String aboutMe;
+
+    @Lob
+    @Column(name = "profilePic")
+    private byte[] image;
 
 
     public String getEmail() {
@@ -52,5 +56,21 @@ public class User {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }
