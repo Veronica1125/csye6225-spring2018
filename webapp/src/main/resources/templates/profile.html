@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+</head>
+
+<div th:replace="fragments/header :: header"/>
+<body>
+<div th:replace="fragments/navigation :: navigation"/>
+
+<div class="container">
+    <p>User Profile</p>
+    <p>Email Address: <span th:text="${user.email}"></span></p>
+    <div>
+        <img width="150" height="150" th:src="@{/__${user.email}__/profile/pic.jpeg}" />
+        <br/>
+        <form th:if="${edit}" th:action="@{/__${user.email}__/profile/updatepic}" method="post" enctype="multipart/form-data">
+            <input type="file" name="updatepic" accept="image/*"/>
+            <input type="submit" value="Update"/>
+        </form>
+        <form th:if="${edit}" th:action="@{/__${user.email}__/profile/deletepic}" method="post">
+            <input type="submit" name="deletepic" value="Delete"/>
+        </form>
+        <div th:if="${picError}" class="alert alert-danger" role="alert" th:text="${picError}"></div>
+    </div>
+    <p>About Me:</p>
+    <p><span th:text="${user.aboutMe}"></span></p>
+    <form th:if="${edit}" id="About Me" th:action="@{/__${user.email}__/profile}" method="post">
+        <label>Update About Me</label>
+        <br/>
+        <textarea th:type="text" ROWS="15" COLS="65" name = "aboutme"></textarea>
+        <br/>
+        <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+        <label><input type="Submit" name="Submit" value="Update"/></label>
+    </form>
+
+
+
+
+</div>
+<!-- /.container -->
+
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

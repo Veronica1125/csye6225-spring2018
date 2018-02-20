@@ -3,10 +3,14 @@ import com.csye6225.spring2018.pojo.User;
 import com.csye6225.spring2018.repository.UserRepository;
 import com.csye6225.spring2018.service.SecurityServiceImpl;
 import com.csye6225.spring2018.validator.UserValidator;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,13 +18,14 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.security.Principal;
 
 @Controller
@@ -43,8 +48,13 @@ public class IndexController {
     }
 
     @RequestMapping("/")
-    public String index() {
+    public String index(Principal principal, Model model) {
         logger.info("Loading home page.");
+        User user = userRepository.findUserByEmail(principal.getName());
+        if(user == null){
+            return "login";
+        }
+        model.addAttribute("email", user.getEmail());
         return "index";
     }
 
@@ -123,4 +133,76 @@ public class IndexController {
         return "redirect: /login?reset";
     }
 
+    @RequestMapping("/{email}/profile/pic.jpeg")
+    public void getImage(@PathVariable String email, HttpServletResponse httpServletResponse) throws IOException {
+        User user  = userRepository.findUserByEmail(email);
+        byte[] pic = user.getImage();
+        httpServletResponse.setContentType("image/jpeg");
+        ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
+        servletOutputStream.write(pic);
+        servletOutputStream.close();
+        servletOutputStream.flush();
+        servletOutputStream = null;
+    }
+
+    @RequestMapping(value="/{email}/profile", method = RequestMethod.GET)
+    public String userProfile(@PathVariable String email, Principal principal, Model model){
+        if(principal == null || principal.getName() == null || !principal.getName().equals(email)){
+            System.out.println("Visitor view");
+            model.addAttribute("edit", false);
+        }else{
+            System.out.println("Logged in");
+            model.addAttribute("edit", true);
+        }
+        User user = userRepository.findUserByEmail(email);
+        model.addAttribute("user", user);
+        return "profile";
+    }
+
+    @RequestMapping(value = "/{email}/profile", method = RequestMethod.POST)
+    public String userProfile(@PathVariable String email, HttpServletRequest httpServletRequest, Model model){
+        User user = userRepository.findUserByEmail(email);
+        String aboutMe = httpServletRequest.getParameter("aboutme");
+        model.addAttribute("user", user);
+        model.addAttribute("edit", true);
+        if(aboutMe.trim().length() > 140){
+            model.addAttribute("error","Length of About Me should be less than 140 chars!");
+            return "profile";
+        }
+        user.setAboutMe(aboutMe);
+        userRepository.save(user);
+        return "redirect:/{email}/profile";
+    }
+
+    @RequestMapping(value = "/{email}/profile/updatepic", method = RequestMethod.POST)
+    public String updateUserPic(@PathVariable String email, Model model, @RequestParam("updatepic") MultipartFile multipartFile){
+        User user = userRepository.findUserByEmail(email);
+        model.addAttribute("user", user);
+        model.addAttribute("edit", true);
+        byte[] bfile = new byte[(int) multipartFile.getSize()];
+        if(bfile.length == 0){
+            model.addAttribute("picError", "No File Chosen!");
+            return "profile";
+        }
+        try {
+            InputStream inputStream = multipartFile.getInputStream();
+            inputStream.read(bfile);
+            user.setImage(bfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.addAttribute("picError","update profile picture failed!");
+            return "profile";
+        }
+        return "redirect:/{email}/profile";
+    }
+
+    @RequestMapping(value = "/{email}/profile/deletepic", method = RequestMethod.POST)
+    public String deleteUserPic(@PathVariable String email, Model model){
+        User user = userRepository.findUserByEmail(email);
+        model.addAttribute("user", user);
+        model.addAttribute("edit", true);
+        user.setImage(null);
+        userRepository.save(user);
+        return "redirect:/{email}/profile";
+    }
 }
