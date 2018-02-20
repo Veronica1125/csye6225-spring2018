@@ -1,14 +1,15 @@
 {
 
   "Resources" : {
-    "EC2Instance":{
+    "WebServer":{
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
         "InstanceType" : "t2.micro",
         "ImageId" : "ami-66506c1c",
         "DisableApiTermination" : "true",
 	"KeyName" : "csye6225.pub",
-	"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+        "SubnetId" : {"Ref" : "ParamWEBSERVERSUBNETID"},
+	"SecurityGroupIds" : [ {"Ref" : "WebServerSecurityGroupID"}],
 	"BlockDeviceMappings" : [
 	  {
 	    "DeviceName" : "/dev/sda1",
@@ -20,18 +21,68 @@
 	]
        }
       },
-      "InstanceSecurityGroup" : {
-      "Type" : "AWS::EC2::SecurityGroup",
+    "DynamoDBTable" : {
+      "Type" : "AWS::DynamoDB::Table",
       "Properties" : {
-        "GroupDescription" : "Enable SSH access via port 22",
-        "SecurityGroupIngress" : [ {
-          "IpProtocol" : "tcp",
-          "FromPort" : "22",
-          "ToPort" : "22",
-          "CidrIp" : "0.0.0.0/0"
-        } ]
+        "AttributeDefinitions" : [
+          {
+            "AttributeName" : "Id",
+            "AttributeType" : "S"   
+          }
+        ],
+        "KeySchema" : [
+          {
+            "AttributeName" : "Id",
+            "KeyType" : "HASH"
+          }
+        ],
+        "ProvisionedThroughput" : {
+          "ReadCapacityUnits" : "5",
+          "WriteCapacityUnits" : "5"
+        },
+        "TableName" : "csye6225"
+       }
+     },
+     "DBServer" : {
+       "Type" : "AWS::RDS::DBInstance",
+       "Properties" : {
+         "AllocatedStorage" : "100",
+         "DBInstanceIdentifier" : "csye6225-spring2018",
+         "DBName" : "csye6225",
+         "DBInstanceClass" : "db.t2.medium",
+         "MultiAZ" : "false",
+         "Engine" : "MySQL",
+         "EngineVersion" : "5.6.37",
+         "MasterUsername" : "csye6225master",
+         "MasterUserPassword" : "csye6225password",
+         "DBSubnetGroupName" : {"Ref" : "DBSubnetGroup"},
+         "DBSecurityGroups" : [{"Ref" : "DBServerSecurityGroupID"}],
+         "PubliclyAccessible" : "false",
+         "Tags" : [ { "Key" : "Name", "Value" : "DBServer" } ]
+         }
+      },
+      "DBSubnetGroup" : {
+         "Type" : "AWS::RDS::DBSubnetGroup",
+         "Properties" : {
+            "DBSubnetGroupDescription" : "DBSubnetGroup",
+            "SubnetIds" : [ {"Ref" : "ParamDBSERVERSUBNETID"},{"Ref" : "ParamWEBSERVERSUBNETID"}],
+            "Tags" : [ {"Key" : "Name", "Value" : "DBSubnetGroup"} ]
+         }
       }
-    }
-
-    }
+       
+  },
+  "Parameters" : {
+	"ParamWEBSERVERSUBNETID" : {
+            "Type" : "String"
+	},
+       "ParamDBSERVERSUBNETID" : {
+            "Type" : "String"
+	},
+       "WebServerSecurityGroupID" : {
+            "Type" : "String"
+        },
+       "DBServerSecurityGroupID" : {
+            "Type" : "String"
+        }
+ }  
 }
