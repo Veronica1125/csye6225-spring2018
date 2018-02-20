@@ -3,7 +3,8 @@ set -e
 echo "Author: Yichuan Zhang"
 echo "		zhang.yichu@husky.neu.edu"
 
-STACK_NAME=$1
+echo "Type in the application stack you want to delete"
+read STACK_NAME
 echo "The stack you want to delete: "
 
 #Query the stack

@@ -21,7 +21,12 @@
 
 <div class="container">
     <p>
-        Welcome to CSYE 6225 Spring 2018 Semester!!! |
+        Welcome : <span th:text="${email}">email</span>. You have signed in.
+    </p>
+    <p>
+        <a href="profile.html" th:href="@{/__${email}__/profile}">My Profile</a>
+    </p>
+    <p>
         <form th:action="@{/logout}" method="post">
             <input type="submit" name="submit" value="logout" class="button"/>
         </form>
