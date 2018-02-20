@@ -21,7 +21,7 @@ echo "Please wait..."
 
 while [ $STACK_STATUS != "CREATE_COMPLETE" ]
 do
-	STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
+	     STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
 done
 
 #Find vpc Id
@@ -41,4 +41,3 @@ aws ec2 create-tags --resources $gatewayId --tags Key=Name,Value=$STACK_NAME-csy
 
 #Job Done!
 echo "Job Done!"
-

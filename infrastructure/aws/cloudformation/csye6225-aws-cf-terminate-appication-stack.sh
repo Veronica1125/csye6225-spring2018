@@ -1,9 +1,9 @@
 set -e
-#Author Yichuan Zhang
-echo "Author: Yichuan Zhang"
-echo "		zhang.yichu@husky.neu.edu"
-echo "Type in the network stack you want to delete"
-read STACK_NAME
+#Author Xiao Li
+echo "Author: Xiao Li"
+echo "		li.xiao5@husky.neu.edu"
+
+STACK_NAME=$1
 echo "The stack you want to delete: "
 
 #Query the stack
