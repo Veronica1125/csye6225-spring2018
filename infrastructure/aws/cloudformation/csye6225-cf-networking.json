@@ -1,45 +1,13 @@
+
 {
 
   "Resources" : {
-    "EC2Instance":{
-      "Type" : "AWS::EC2::Instance",
-      "Properties" : {
-        "InstanceType" : "t2.micro",
-        "ImageId" : "ami-66506c1c",
-        "DisableApiTermination" : "true",
-	"KeyName" : "csye6225.pub",
-	"SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
-	"BlockDeviceMappings" : [
-	  {
-	    "DeviceName" : "/dev/sda1",
-	    "Ebs" : {
-		"VolumeSize" : "16",
-		"VolumeType" : "gp2"
-	    }
-	  }
-	]
-      }
-    },
-
-    "InstanceSecurityGroup" : {
-      "Type" : "AWS::EC2::SecurityGroup",
-      "Properties" : {
-        "GroupDescription" : "Enable SSH access via port 22",
-        "SecurityGroupIngress" : [ {
-          "IpProtocol" : "tcp",
-          "FromPort" : "22",
-          "ToPort" : "22",
-          "CidrIp" : "0.0.0.0/0"
-        } ]
-      }
-    },	
-
     "VPC" : {
       "Type" : "AWS::EC2::VPC",
       "Properties" : {
         "CidrBlock" : "10.0.0.0/16",
         "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
-		   {"Key" : "Name", "Value" : {"Ref" : "AWS::StackName"} }		
+		  {"Key" : "Name", "Value": {"Ref" :"AWS::StackName"} }		
 		 ]
       }
     },
@@ -65,8 +33,17 @@
       "Type" : "AWS::EC2::RouteTable",
       "Properties" : {
         "VpcId" : {"Ref" : "VPC"},
-        "Tags" : [ {"Key" : "Name", "Value" : { "Ref" : "AWS::StackId"} },
-		   {"Key" : "Name", "Value" : {"Ref" : "AWS::StackName"} }	
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+		   {"Key" : "Name", "Value" : {"Ref" : "ParamPublicRouteTableName"} }	
+		 ]
+      }
+    },
+    "PrivateRouteTable" : {
+      "Type" : "AWS::EC2::RouteTable",
+      "Properties" : {
+        "VpcId" : {"Ref" : "VPC"},
+        "Tags" : [ {"Key" : "Application", "Value" : { "Ref" : "AWS::StackId"} },
+		   {"Key" : "Name", "Value" : {"Ref" : "ParamPrivateRouteTableName"} }	
 		 ]
       }
     },
@@ -79,6 +56,99 @@
         "DestinationCidrBlock" : "0.0.0.0/0",
         "GatewayId" : { "Ref" : "InternetGateway" }
       }
-    }
+    },
+    "SubnetForWebServers" : {
+         "Type" : "AWS::EC2::Subnet",
+         "Properties" : {
+            "VpcId" : { "Ref" : "VPC" },
+            "CidrBlock" : "10.0.0.0/24",
+            "AvailabilityZone" : "us-east-1a",
+            "Tags" : [ { "Key" : "Name", "Value" : "SubnetForWebServers" } ]
+         }
+      },
+    "SubnetForWebServersSubnetRouteTableAssociation" : {
+         "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+         "Properties" : {
+            "SubnetId" : { "Ref" : "SubnetForWebServers" },
+            "RouteTableId" : { "Ref" : "RouteTable" }
+         }
+      },
+    "SubnetForDBServers" : {
+         "Type" : "AWS::EC2::Subnet",
+         "Properties" : {
+            "VpcId" : { "Ref" : "VPC" },
+            "CidrBlock" : "10.0.1.0/24",
+            "AvailabilityZone" : "us-east-1b",
+            "Tags" : [ { "Key" : "Name", "Value" : "SubnetForDBServers" } ]
+         }
+      },
+    "SubnetForDBServersSubnetRouteTableAssociation" : {
+         "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+         "Properties" : {
+            "SubnetId" : { "Ref" : "SubnetForDBServers" },
+            "RouteTableId" : { "Ref" : "PrivateRouteTable" }
+         }
+      },
+      "WebServerSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+ 	"GroupName":"WebServerSecurityGroup",
+        "GroupDescription" : "Enable TCP access via port 22, 80 and 443",
+        "VpcId":{"Ref":"VPC"},
+        "SecurityGroupIngress" : [ {
+          "IpProtocol" : "tcp",
+          "FromPort" : "22",
+          "ToPort" : "22",
+          "CidrIp" : "0.0.0.0/0"
+         },
+         {
+           "IpProtocol": "tcp",
+           "FromPort": "80",
+           "ToPort": "80",
+           "CidrIp": "0.0.0.0/0"
+         },
+         {
+           "IpProtocol": "tcp",
+           "FromPort": "443",
+           "ToPort": "443",
+           "CidrIp": "0.0.0.0/0"
+         }
+       ]
+      }
+    },
+      "DBServerSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+ 	"GroupName":"DBServerSecurityGroup",
+        "GroupDescription" : "Enable TCP access via port 3306",
+        "VpcId":{"Ref":"VPC"},
+        "SecurityGroupIngress" : [ {
+          "IpProtocol" : "tcp",
+          "FromPort" : "3306",
+          "ToPort" : "3306",
+          "SourceSecurityGroupId" : {"Ref" : "WebServerSecurityGroup"}
+         }
+       ]
+      }
+    },    
+   "DBSecurityGroup": {
+   "Type": "AWS::RDS::DBSecurityGroup",
+   "Properties": {
+      "EC2VpcId" : { "Ref" : "VPC" },
+      "DBSecurityGroupIngress": [
+         {"EC2SecurityGroupId": { "Ref": "DBServerSecurityGroup"}}
+      ],
+      "GroupDescription": "Allow 3306 to DB"
+      }
+   }
+ },
+  "Parameters" : {
+	"ParamPublicRouteTableName" : {
+            "Type" : "String"
+	},
+       "ParamPrivateRouteTableName" : {
+            "Type" : "String"
+	}
  }
 }
+

@@ -1,4 +1,5 @@
 set -e
+
 #Author: Xiao Li
 echo "Author: Xiao Li"
 echo "        li.xiao5@husky.neu.edu"
