@@ -1,21 +1,44 @@
-
 language: java
 jdk:
-- openjdk8
+  - oraclejdk8
 
 sudo: false
 install: true
 
 script:
+  - pwd
   - cd webapp
-  - ./gradlew build
   - ./gradlew war
-  - gradle -Dtest.single=ApplicationTest test
+  - cd build/libs
+  - ls -al
+  - cd ../../..
+  - pwd
+  - ls -al
 
-notifications:
-  username:
-    recipients:
-      - li.xiao5@husky.neu.edu
-    on_success: always
-    on_failure: always
+after_success:
+ - pwd
+ - ls -al
+ - mkdir codedeploy
+ - cp infrastructure/aws/codedeploy/*.yml .
+ - zip -r assignment6.zip webapp/build/libs/ROOT.war *.yml
+ - ls -al
+ - mv assignment6.zip codedeploy/
+ - ls -al
+ - pwd
+ - cd codedeploy
+ - ls -al
+ - pwd
+ - cd ..
+ - pwd
+ - ls -al
 
+deploy:
+ - provider: s3
+   local_dir: codedeploy
+   bucket: xiaoli.csye6225.com
+   region: us-east-1
+   skip_cleanup: true
+   access_key_id: $access_key_id
+   secret_access_key: $secret_access_key
+   on:
+    all_branches: true
