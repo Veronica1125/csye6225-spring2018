@@ -35,7 +35,7 @@ after_success:
 deploy:
  - provider: s3
    local_dir: codedeploy
-   bucket: xiaoli.csye6225.com
+   bucket: s3.csye6225-spring2018-lixiao5.me
    region: us-east-1
    skip_cleanup: true
    access_key_id: $access_key_id
