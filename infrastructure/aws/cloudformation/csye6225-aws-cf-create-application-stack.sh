@@ -1,7 +1,9 @@
 set -e
+
 #Author Xiao Li
 echo "Author: Xiao Li"
 echo "	      li.xiao5@husky.neu.edu"
+
 #Usage: Taking STACK_NAME as parameter and building a vpc, internet gateway, route table and route through aws cloudformation
 
 echo "Enter Application Stack Name:"
@@ -34,6 +36,7 @@ ParamDBSERVERSUBNETID=$DBSERVERSUBNETID
 
 #Create Stack
 aws cloudformation create-stack --stack-name $STACK_NAME --template-body file://csye6225-cf-application.json --parameters ParameterKey=ParamWEBSERVERSUBNETID,ParameterValue=$ParamWEBSERVERSUBNETID ParameterKey=ParamDBSERVERSUBNETID,ParameterValue=$ParamDBSERVERSUBNETID ParameterKey=WebServerSecurityGroupID,ParameterValue=$WebServerSecurityGroupID ParameterKey=DBServerSecurityGroupID,ParameterValue=$DBServerSecurityGroupID
+
 #Check Stack Status
 STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
 

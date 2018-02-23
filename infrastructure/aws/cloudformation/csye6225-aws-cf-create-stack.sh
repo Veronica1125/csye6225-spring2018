@@ -1,8 +1,11 @@
 set -e
+
+
 #Author Xiao Li
 echo "Author: Xiao Li"
 echo "	      li.xiao5@husky.neu.edu"
 #Usage: Taking STACK_NAME as parameter and building a vpc, internet gateway, route table and route through aws cloudformation
+
 
 echo "Enter NetWork Stack Name:"
 read STACK_NAME
@@ -13,6 +16,7 @@ ParamPrivateRouteTableName=$STACK_NAME-csye6225-private-route-table
 
 #Create Stack
 aws cloudformation create-stack --stack-name $STACK_NAME --template-body file://csye6225-cf-networking.json --parameters ParameterKey=ParamPublicRouteTableName,ParameterValue=$ParamPublicRouteTableName ParameterKey=ParamPrivateRouteTableName,ParameterValue=$ParamPrivateRouteTableName
+
 #Check Stack Status
 STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
 
@@ -21,7 +25,9 @@ echo "Please wait..."
 
 while [ $STACK_STATUS != "CREATE_COMPLETE" ]
 do
-	     STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
+
+	STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
+
 done
 
 #Find vpc Id
