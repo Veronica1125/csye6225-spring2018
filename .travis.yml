@@ -15,7 +15,7 @@ script:
 notifications:
   username:
     recipients:
-      - yuan.yang@husky.neu.edu
+      - li.xiao5@husky.neu.edu
     on_success: always
     on_failure: always
 

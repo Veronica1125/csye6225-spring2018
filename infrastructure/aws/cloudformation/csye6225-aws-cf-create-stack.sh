@@ -1,9 +1,11 @@
 set -e
 
-#Author: Xiao Li
-echo "Author: Yang Yuan"
-echo "        yuan.yang@husky.neu.edu"
-#Usage: setting up our networking resources such as Virtual Private Cloud (VPC), Internet Gateway, Route Table and Routes using AWS Cloud Formation
+
+#Author Xiao Li
+echo "Author: Xiao Li"
+echo "	      li.xiao5@husky.neu.edu"
+#Usage: Taking STACK_NAME as parameter and building a vpc, internet gateway, route table and route through aws cloudformation
+
 
 echo "Enter NetWork Stack Name:"
 read STACK_NAME
@@ -45,4 +47,3 @@ aws ec2 create-tags --resources $gatewayId --tags Key=Name,Value=$STACK_NAME-csy
 
 #Job Done!
 echo "Job Done!"
-

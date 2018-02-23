@@ -1,8 +1,9 @@
 set -e
 
-#Author Yang Yuan
-echo "Author: Yang Yuan"
-echo "		yuan.yang@husky.neu.edu"
+#Author Xiao Li
+echo "Author: Xiao Li"
+echo "	 li.xiao5@husky.neu.edu"
+
 
 echo "Type in the application stack you want to delete"
 read STACK_NAME
