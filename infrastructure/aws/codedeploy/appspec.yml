@@ -1,0 +1,16 @@
+version: 0.0
+os: linux
+
+files:
+  - source: ./appspec.yml
+    destination: /home/ubuntu
+  - source: ./restartTomcat.sh
+    destination: /home/ubuntu
+  - source: ./build/libs/ROOT.war
+    destination: /var/lib/tomcat7/webapps
+
+hooks:
+  AfterInstall:
+   - location: ./restartTomcat.sh
+     timeout: 180
+     runas: ubuntu
