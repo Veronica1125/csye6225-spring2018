@@ -1,0 +1,21 @@
+{
+  "Resources" : {
+    "IAMPolicy" : {
+	"Type": "AWS::IAM::Policy",
+	"Properties": {
+	    "PolicyName": "CodeDeploy-EC2-S3",
+	    "PolicyDocument": {
+            "Version" : "2012-10-17",
+            "Statement": [
+		    { "Effect": "Allow", "Action": "*", "Resource": "*" }
+		 ]
+	      },
+	      "Roles": [ { "Ref": "CodeDeployEC2ServiceRole " } ]
+	   }
+	},
+
+
+
+	
+}
+}
