@@ -1,3 +1,4 @@
+
 language: java
 jdk:
   - oraclejdk8
@@ -16,29 +17,42 @@ script:
   - ls -al
 
 after_success:
- - pwd
- - ls -al
- - mkdir codedeploy
- - cp infrastructure/aws/codedeploy/*.yml .
- - zip -r assignment6.zip webapp/build/libs/ROOT.war *.yml
- - ls -al
- - mv assignment6.zip codedeploy/
- - ls -al
- - pwd
- - cd codedeploy
- - ls -al
- - pwd
- - cd ..
- - pwd
- - ls -al
+  - pwd
+  - ls -al
+  - mkdir codedeploy_artifact
+  - cp infrastructure/aws/codedeploy/*.sh .
+  - cp infrastructure/aws/codedeploy/*.yml .
+  - zip -r csye6225-web-app-$TRAVIS_JOB_NUMBER.zip webapp/build/libs/ROOT.war *.sh *.yml
+  - ls -al
+  - mv csye6225-web-app-$TRAVIS_JOB_NUMBER.zip codedeploy_artifact/
+  - ls -al
+  - pwd
+  - cd codedeploy_artifact
+  - ls -al
+  - pwd
+  - cd ..
+  - pwd
+  - ls -al
 
 deploy:
- - provider: s3
-   local_dir: codedeploy
-   bucket: s3.csye6225-spring2018-lixiao5.me
-   region: us-east-1
-   skip_cleanup: true
-   access_key_id: $access_key_id
-   secret_access_key: $secret_access_key
-   on:
-     all_branches: true
+  - provider: s3
+    local_dir: codedeploy_artifact
+    bucket: xiaoli.csye6225.com
+    region: us-east-1
+    skip_cleanup: true
+    access_key_id: $access_key_id
+    secret_access_key: $secret_access_key
+    on:
+      all_branches: true
+  # - provider: codedeploy
+  #   access_key_id: $access_key_id
+  #   bucket: $s3_bucket
+  #   key: csye6225-web-app-$TRAVIS_JOB_NUMBER.zip
+  #   bundle_type: zip
+  #   application: $application
+  #   deployment_group: $deployment_group
+  #   region: us-east-1
+  #   secret_access_key: $secret_access_key
+  #   wait-until-deployed: true
+  #   on:
+#     branch: master
