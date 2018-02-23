@@ -21,7 +21,6 @@
 	]
        }
       },
-
     "DynamoDBTable" : {
       "Type" : "AWS::DynamoDB::Table",
       "Properties" : {
@@ -44,7 +43,6 @@
         "TableName" : "csye6225"
        }
      },
-
      "DBServer" : {
        "Type" : "AWS::RDS::DBInstance",
        "Properties" : {
@@ -63,7 +61,6 @@
          "Tags" : [ { "Key" : "Name", "Value" : "DBServer" } ]
          }
       },
-
       "DBSubnetGroup" : {
          "Type" : "AWS::RDS::DBSubnetGroup",
          "Properties" : {
@@ -74,8 +71,7 @@
       }
        
   },
-
-      "Parameters" : {
+  "Parameters" : {
 	"ParamWEBSERVERSUBNETID" : {
             "Type" : "String"
 	},
@@ -88,6 +84,5 @@
        "DBServerSecurityGroupID" : {
             "Type" : "String"
         }
-
  }  
 }
