@@ -44,3 +44,4 @@ deploy:
     secret_access_key: $secret_access_key
     on:
       all_branches: true
+   
