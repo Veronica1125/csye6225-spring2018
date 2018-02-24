@@ -1,0 +1,123 @@
+{
+    "Resources":{
+        "CodeDeployEC2S3":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties":{
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": [
+                                "s3:Get*",
+                                "s3:List*"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "PolicyName" :  "CodeDeployEC2S3",
+                "Roles" : [{"Ref":"CodeDeployEC2ServiceRole"}] 
+            }         
+        },
+        "TravisUploadToS3":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties":{
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "s3:PutObject"
+                            ],
+                            "Resource": [
+                                "*"
+                            ]
+                        }
+                    ]
+                },
+                "PolicyName" :  "TravisUploadToS3",
+                "Users" : [{"Ref": "Travis"}] 
+            }
+        },
+        "TravisCodeDeploy":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties":{
+                "PolicyDocument":{
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "codedeploy:RegisterApplicationRevision",
+                          "codedeploy:GetApplicationRevision"
+                        ],
+                        "Resource": [
+                          "arn:aws:codedeploy:us-east-1:910175779811:application:CODE_DEPLOY_APPLICATION_NAME"
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "codedeploy:CreateDeployment",
+                          "codedeploy:GetDeployment"
+                        ],
+                        "Resource": [
+                          "*"
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "codedeploy:GetDeploymentConfig"
+                        ],
+                        "Resource": [
+                          "arn:aws:codedeploy:us-east-1:910175779811:deploymentconfig:CodeDeployDefault.OneAtATime",
+                          "arn:aws:codedeploy:us-east-1:910175779811:deploymentconfig:CodeDeployDefault.HalfAtATime",
+                          "arn:aws:codedeploy:us-east-1:910175779811:deploymentconfig:CodeDeployDefault.AllAtOnce"
+                        ]
+                      }
+                    ]
+                  },
+                "PolicyName" :  "TravisCodeDeploy",
+                "Users" : [{"Ref": "Travis"}]              
+            }
+        },
+        "CodeDeployEC2ServiceRole":{
+            "Type":"AWS::IAM::Role",
+            "Properties":{
+                "AssumeRolePolicyDocument": {
+                    "Version" : "2012-10-17",
+                    "Statement": [ {
+                       "Effect": "Allow",
+                       "Principal": {
+                          "Service": [ "ec2.amazonaws.com" ]
+                       },
+                       "Action": [ "sts:AssumeRole" ]
+                    } ]
+                 } 
+            }
+        },
+        "CodeDeployServiceRole":{
+            "Type":"AWS::IAM::Role",
+            "Properties":{
+                "AssumeRolePolicyDocument":{
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "codedeploy.amazonaws.com"
+                                ]
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
