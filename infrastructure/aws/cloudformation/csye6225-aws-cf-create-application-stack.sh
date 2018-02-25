@@ -1,7 +1,7 @@
 set -e
-#Author Xiao Li
-echo "Author: Xiao Li"
-echo "	      li.xiao5@husky.neu.edu"
+#Author Yichuan Zhang
+echo "Author: Yichuan Zhang"
+echo "	      zhang.yichu@husky.neu.edu"
 #Usage: Taking STACK_NAME as parameter and building a vpc, internet gateway, route table and route through aws cloudformation
 
 echo "Enter Application Stack Name:"
@@ -47,3 +47,4 @@ done
 
 #Job Done!
 echo "Job Done!"
+

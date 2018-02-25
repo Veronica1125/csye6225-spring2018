@@ -1,7 +1,7 @@
 set -e
-#Author Xiao Li
-echo "Author: Xiao Li"
-echo "	      li.xiao5@husky.neu.edu"
+#Author Yichuan Zhang
+echo "Author: Yichuan Zhang"
+echo "	      zhang.yichu@husky.neu.edu"
 #Usage: Taking STACK_NAME as parameter and building a vpc, internet gateway, route table and route through aws cloudformation
 
 echo "Enter NetWork Stack Name:"
@@ -21,7 +21,7 @@ echo "Please wait..."
 
 while [ $STACK_STATUS != "CREATE_COMPLETE" ]
 do
-	     STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
+	STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
 done
 
 #Find vpc Id
@@ -41,3 +41,4 @@ aws ec2 create-tags --resources $gatewayId --tags Key=Name,Value=$STACK_NAME-csy
 
 #Job Done!
 echo "Job Done!"
+
