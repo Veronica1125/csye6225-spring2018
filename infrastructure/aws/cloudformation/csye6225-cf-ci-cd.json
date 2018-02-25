@@ -38,7 +38,7 @@
                     ]
                 },
                 "PolicyName" :  "TravisUploadToS3",
-                "Users" : [{"Ref": "Travis"}] 
+                "Users" : ["Travis-User"] 
             }
         },
         "TravisCodeDeploy":{
@@ -81,7 +81,7 @@
                     ]
                   },
                 "PolicyName" :  "TravisCodeDeploy",
-                "Users" : [{"Ref": "Travis"}]              
+                "Users" : ["Travis-User"]              
             }
         },
         "CodeDeployEC2ServiceRole":{
@@ -96,7 +96,8 @@
                        },
                        "Action": [ "sts:AssumeRole" ]
                     } ]
-                 } 
+                 },
+                 "RoleName": "CodeDeployEC2ServiceRole" 
             }
         },
         "CodeDeployServiceRole":{
@@ -116,7 +117,9 @@
                             "Action": "sts:AssumeRole"
                         }
                     ]
-                }
+                },
+                "RoleName":"CodeDeployServiceRole",
+                "ManagedPolicyArns":["arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"]
             }
         }
     }
