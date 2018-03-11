@@ -70,7 +70,8 @@
           "chown tomcat8:tomcat8 /usr/share/tomcat8/bin/setenv.sh\n",
           "chmod 777 -R /tmp\n",
           "chmod 777 /var/lib/tomcat8 \n",
-          "chmod 777 /var/lib/tomcat8/webapps\n"
+          "chmod 777 /var/lib/tomcat8/webapps\n",
+          "sudo service tomcat8 restart\n"
         ]
       ]
     }
