@@ -54,7 +54,7 @@
                           "codedeploy:GetApplicationRevision"
                         ],
                         "Resource": [
-                          "arn:aws:codedeploy:us-east-1:910175779811:application:CODE_DEPLOY_APPLICATION_NAME"
+                          "arn:aws:codedeploy:us-east-1:910175779811:application:csye6225-webapp"
                         ]
                       },
                       {

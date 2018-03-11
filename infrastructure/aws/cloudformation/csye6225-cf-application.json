@@ -1,6 +1,15 @@
 {
 
   "Resources" : {
+    "CodeDeployEC2ServiceRoleInstanceProfile": {
+			"Type": "AWS::IAM::InstanceProfile",
+			"Properties": {
+				"Path": "/",
+				"Roles": [
+					"CodeDeployEC2ServiceRole"
+				]
+			}
+    },
     "WebServer":{
       "Type" : "AWS::EC2::Instance",
       "Properties" : {
@@ -56,11 +65,18 @@
           },
           {
             "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${S3BucketName}\"' >> /usr/share/tomcat8/bin/setenv.sh \n"
-          }
-          
+          },
+          "chmod +x /usr/share/tomcat8/bin/setenv.sh\n",
+          "chown tomcat8:tomcat8 /usr/share/tomcat8/bin/setenv.sh\n",
+          "chmod 777 -R /tmp\n",
+          "chmod 777 /var/lib/tomcat8 \n",
+          "chmod 777 /var/lib/tomcat8/webapps\n"
         ]
       ]
     }
+  },
+  "IamInstanceProfile": {
+    "Ref": "CodeDeployEC2ServiceRoleInstanceProfile"
   },
   "Tags" : [ { "Key" : "Name", "Value" : "WebServer" } ]
        }

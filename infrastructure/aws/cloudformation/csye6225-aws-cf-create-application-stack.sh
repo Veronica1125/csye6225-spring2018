@@ -39,7 +39,7 @@ DBPassword=12345678
 S3BucketName=s3-code-deploy-csye6225.com
 
 #Create Stack
-aws cloudformation create-stack --stack-name $STACK_NAME --template-body file://csye6225-cf-application.json --parameters ParameterKey=ParamWEBSERVERSUBNETID,ParameterValue=$ParamWEBSERVERSUBNETID ParameterKey=ParamDBSERVERSUBNETID,ParameterValue=$ParamDBSERVERSUBNETID ParameterKey=WebServerSecurityGroupID,ParameterValue=$WebServerSecurityGroupID ParameterKey=DBServerSecurityGroupID,ParameterValue=$DBServerSecurityGroupID ParameterKey=DBUser,ParameterValue=$DBUser ParameterKey=DBPassword,ParameterValue=$DBPassword ParameterKey=S3BucketName,ParameterValue=$S3BucketName
+aws cloudformation create-stack --stack-name $STACK_NAME --template-body file://csye6225-cf-application.json --capabilities CAPABILITY_IAM --parameters ParameterKey=ParamWEBSERVERSUBNETID,ParameterValue=$ParamWEBSERVERSUBNETID ParameterKey=ParamDBSERVERSUBNETID,ParameterValue=$ParamDBSERVERSUBNETID ParameterKey=WebServerSecurityGroupID,ParameterValue=$WebServerSecurityGroupID ParameterKey=DBServerSecurityGroupID,ParameterValue=$DBServerSecurityGroupID ParameterKey=DBUser,ParameterValue=$DBUser ParameterKey=DBPassword,ParameterValue=$DBPassword ParameterKey=S3BucketName,ParameterValue=$S3BucketName
 #Check Stack Status
 STACK_STATUS=`aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[][ [StackStatus ] ][]" --output text`
 

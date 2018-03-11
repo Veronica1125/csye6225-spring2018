@@ -49,8 +49,8 @@ deploy:
     bucket: s3-code-deploy-csye6225.com
     key: csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip
     bundle_type: zip
-    application: CODE_DEPLOY_APPLICATION_NAME
-    deployment_group: csye6225-web-app
+    application: csye6225-webapp
+    deployment_group: csye6225-webapp
     region: us-east-1
     secret_access_key: $secret_access_key
     wait-until-deployed: true
