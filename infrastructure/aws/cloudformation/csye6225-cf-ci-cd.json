@@ -1,4 +1,18 @@
-{
+{   "Parameters":{
+        "RESOURCE1" : {
+            "Type" : "String"
+        },
+        "RESOURCE2" : {
+            "Type" : "String"
+        },
+        "RESOURCE3" : {
+            "Type" : "String"
+        },
+        "RESOURCE4" : {
+            "Type" : "String"
+        }
+    },
+
     "Resources":{
         "CodeDeployEC2S3":{
             "Type" : "AWS::IAM::Policy",
@@ -54,7 +68,7 @@
                           "codedeploy:GetApplicationRevision"
                         ],
                         "Resource": [
-                          "arn:aws:codedeploy:us-east-1:910175779811:application:csye6225-webapp"
+                          {"Ref" : "RESOURCE1"}
                         ]
                       },
                       {
@@ -73,9 +87,9 @@
                           "codedeploy:GetDeploymentConfig"
                         ],
                         "Resource": [
-                          "arn:aws:codedeploy:us-east-1:910175779811:deploymentconfig:CodeDeployDefault.OneAtATime",
-                          "arn:aws:codedeploy:us-east-1:910175779811:deploymentconfig:CodeDeployDefault.HalfAtATime",
-                          "arn:aws:codedeploy:us-east-1:910175779811:deploymentconfig:CodeDeployDefault.AllAtOnce"
+                            {"Ref" : "RESOURCE2"},
+                            {"Ref" : "RESOURCE3"},
+                            {"Ref" : "RESOURCE4"}
                         ]
                       }
                     ]

@@ -60,6 +60,7 @@
          "Type" : "AWS::EC2::Subnet",
          "Properties" : {
             "VpcId" : { "Ref" : "VPC" },
+            "MapPublicIpOnLaunch" : "true",
             "CidrBlock" : "10.0.0.0/24",
             "AvailabilityZone" : "us-east-1a",
             "Tags" : [ { "Key" : "Name", "Value" : "SubnetForWebServers" } ]
