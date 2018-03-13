@@ -117,7 +117,7 @@
          "MasterUsername" : {"Ref" :"DBUser"},
          "MasterUserPassword" : {"Ref" : "DBPassword"},
          "DBSubnetGroupName" : {"Ref" : "DBSubnetGroup"},
-         "DBSecurityGroups" : [{"Ref" : "DBServerSecurityGroupID"}],
+         "VPCSecurityGroups" : [{"Ref" : "DBServerSecurityGroupID"}],
          "PubliclyAccessible" : "false",
          "Tags" : [ { "Key" : "Name", "Value" : "DBServer" } ]
          }

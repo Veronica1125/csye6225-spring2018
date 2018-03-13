@@ -1,7 +1,5 @@
 set -e
-#Author Yichuan Zhang
-echo "Author: Yichuan Zhang"
-echo "	      zhang.yichu@husky.neu.edu"
+
 #Usage: Taking STACK_NAME as parameter and building a vpc, internet gateway, route table and route through aws cloudformation
 
 echo "Enter Application Stack Name:"
@@ -14,7 +12,8 @@ read NETWORK_STACK_NAME
 VpcID=`aws ec2 describe-vpcs --filter "Name=tag:Name,Values=${NETWORK_STACK_NAME}-csye6225-vpc" --query 'Vpcs[*].{id:VpcId}' --output text`
 echo "Vpc found: "$VpcID
 #ParamVpcID=$VpcID
-DBServerSecurityGroupID=`aws rds describe-db-security-groups --filters "Name=VpcId, Values=${VpcId}" --query "DBSecurityGroups[1].DBSecurityGroupName" --output text`
+#DBServerSecurityGroupID=`aws rds describe-db-security-groups --filters "Name=VpcId, Values=${VpcID}" --query "DBSecurityGroups[*].DBSecurityGroupName" --output text`
+DBServerSecurityGroupID=`aws ec2 describe-security-groups --filters "Name=tag:aws:cloudformation:logical-id, Values=DBServerSecurityGroup" --query "SecurityGroups[*].GroupId" --output text`
 
 WebServerSecurityGroupID=`aws ec2 describe-security-groups --filters "Name=tag:aws:cloudformation:logical-id, Values=WebServerSecurityGroup" --query "SecurityGroups[*].GroupId" --output text`
 
