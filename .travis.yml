@@ -39,7 +39,7 @@ after_success:
 deploy:
   - provider: s3
     local_dir: codedeploy_artifact
-    bucket: s3-code-deploy-csye6225.com
+    bucket: $S3BucketName
     region: us-east-1
     skip_cleanup: true
     access_key_id: $access_key_id
