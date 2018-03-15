@@ -1,0 +1,47 @@
+
+language: java
+jdk:
+  - oraclejdk8
+
+sudo: false
+install: true
+
+script:
+  - pwd
+  - cd webapp
+  - ./gradlew war
+  - cd build/libs
+  - ls -al
+  - cd ../../..
+  - pwd
+  - ls -al
+
+after_success:
+  - pwd
+  - ls -al
+  - mkdir codedeploy_artifact
+  - cp infrastructure/aws/codedeploy/*.sh .
+  - cp infrastructure/aws/codedeploy/*.yml .
+  - zip -r csye6225-web-app.zip webapp/build/libs/ROOT.war *.sh *.yml
+  - ls -al
+  - mv csye6225-web-app.zip codedeploy_artifact/
+  - ls -al
+  - pwd
+  - cd codedeploy_artifact
+  - ls -al
+  - pwd
+  - cd ..
+  - pwd
+  - ls -al
+
+deploy:
+  - provider: s3
+    local_dir: codedeploy_artifact
+    bucket: xiaoli.csye6225.com
+    region: us-east-1
+    skip_cleanup: true
+    access_key_id: $access_key_id
+    secret_access_key: $secret_access_key
+    on:
+      all_branches: true
+   
