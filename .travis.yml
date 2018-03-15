@@ -49,7 +49,7 @@ deploy:
 
   - provider: codedeploy
     access_key_id: $access_key_id
-    bucket: s3-code-deploy-csye6225.com
+    bucket: $S3BucketName
     key: csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip
     bundle_type: zip
     application: csye6225-webapp
