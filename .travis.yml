@@ -1,0 +1,68 @@
+language: java
+jdk:
+- openjdk8
+
+sudo: false
+install: true
+
+script:
+  - cd webapp
+  - ./gradlew war
+  - gradle -Dtest.single=ApplicationTest test
+  - cd build/libs
+  - ls -al
+  - cd ../../..
+  - pwd
+  - ls -al
+
+after_success:
+  - pwd
+  - ls -al
+  - mkdir codedeploy_artifact
+  - cp infrastructure/aws/codedeploy/*.sh ./webapp
+  - cp infrastructure/aws/codedeploy/*.yml ./webapp
+  - cd webapp
+  - zip -r csye6225-web-app-$TRAVIS_JOB_NUMBER.zip build/libs/ROOT.war *.sh *.yml
+  - mv csye6225-web-app-$TRAVIS_JOB_NUMBER.zip ../
+  - cd ..
+  - ls -al
+  - mv csye6225-web-app-$TRAVIS_JOB_NUMBER.zip codedeploy_artifact/
+  - ls -al
+  - pwd
+  - cd codedeploy_artifact
+  - ls -al
+  - pwd
+  - cd ..
+  - pwd
+  - ls -al
+
+deploy:
+  - provider: s3
+    local_dir: codedeploy_artifact
+    bucket: s3-code-deploy-csye6225.com
+    region: us-east-1
+    skip_cleanup: true
+    access_key_id: $access_key_id
+    secret_access_key: $secret_access_key
+    on:
+      branch: assignment6
+
+  - provider: codedeploy
+    access_key_id: $access_key_id
+    bucket: s3-code-deploy-csye6225.com
+    key: csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip
+    bundle_type: zip
+    application: csye6225-webapp
+    deployment_group: csye6225-webapp
+    region: us-east-1
+    secret_access_key: $secret_access_key
+    wait-until-deployed: true
+    on:
+      branch: assignment6
+
+notifications:
+  username:
+    recipients:
+      - zhang.yichu@husky.neu.edu
+      - li.xiao5@husky.neu.edu
+      - yuan.yang@husky.neu.edu
