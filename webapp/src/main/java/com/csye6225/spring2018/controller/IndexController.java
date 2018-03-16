@@ -100,7 +100,7 @@ public class IndexController {
         user.setPassword(bCryptPasswordEncoder().encode(password));
         user.setConfirmPassword(null);
         userRepository.save(user);
-        return "redirect: /login?signup";
+        return "redirect:/login?signup";
     }
 
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
@@ -133,7 +133,7 @@ public class IndexController {
         if(auth != null){
             new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
         }
-        return "redirect: /login?reset";
+        return "redirect:/login?reset";
     }
 
     @RequestMapping("/{email}/profile/pic.jpeg")
