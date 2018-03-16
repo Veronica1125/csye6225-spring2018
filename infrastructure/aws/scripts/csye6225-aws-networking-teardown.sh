@@ -1,7 +1,9 @@
 set -e
-#Author: Yichuan Zhang
-echo "Author: Yichuan Zhang"
-echo "        zhang.yichu@husky.neu.edu"
+
+#Author: Xiao Li
+echo "Author: Xiao Li"
+echo "        li.xiao5@husky.neu.edu"
+
 #Usage: Deleting our networking resources such as Virtual Private Cloud (VPC), Internet Gateway, Route Table and Routes
 
 #Arguments: STACK_NAME
