@@ -67,7 +67,7 @@ public class IndexController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Model model, String error, String logout, String reset){
+    public String login(Model model, String error, String logout, String reset, String signup){
         if(error != null){
             model.addAttribute("error", "Your email or password is not valid");
         }
@@ -76,6 +76,9 @@ public class IndexController {
         }
         if(reset != null){
             model.addAttribute("reset", "Password reset success, Please login again!");
+        }
+        if(signup != null){
+            model.addAttribute("signup", "Sign up success, Please login!");
         }
         return "login";
     }
@@ -97,7 +100,7 @@ public class IndexController {
         user.setPassword(bCryptPasswordEncoder().encode(password));
         user.setConfirmPassword(null);
         userRepository.save(user);
-        return "login";
+        return "login?signup";
     }
 
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
@@ -130,7 +133,7 @@ public class IndexController {
         if(auth != null){
             new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
         }
-        return "/login?reset";
+        return "redirect:/login?reset";
     }
 
     @RequestMapping("/{email}/profile/pic.jpeg")
