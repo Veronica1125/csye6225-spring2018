@@ -1,4 +1,5 @@
-{   "Parameters":{
+{  
+   "Parameters":{
         "RESOURCE1" : {
             "Type" : "String"
         },
