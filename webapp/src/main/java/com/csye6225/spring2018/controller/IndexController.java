@@ -97,7 +97,7 @@ public class IndexController {
         user.setPassword(bCryptPasswordEncoder().encode(password));
         user.setConfirmPassword(null);
         userRepository.save(user);
-        return "redirect: /";
+        return "redirect: /login";
     }
 
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
