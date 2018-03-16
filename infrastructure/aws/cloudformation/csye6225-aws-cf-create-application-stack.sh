@@ -36,6 +36,7 @@ DBUser=root
 DBPassword=12345678
 
 export ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+
 export S3BucketName=${ACCOUNT_ID}s3-code-deploy-csye6225.com
 
 #Create Stack

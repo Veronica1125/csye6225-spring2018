@@ -15,7 +15,7 @@
       "Properties" : {
         "InstanceType" : "t2.micro",
         "ImageId" : "ami-66506c1c",
-        "DisableApiTermination" : "true",
+        "DisableApiTermination" : "false",
 	      "KeyName" : "csye6225.pub",
         "SubnetId" : {"Ref" : "ParamWEBSERVERSUBNETID"},
 	"SecurityGroupIds" : [ {"Ref" : "WebServerSecurityGroupID"}],
