@@ -90,7 +90,7 @@ public class IndexController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String addUser(@ModelAttribute("user") User user, BindingResult bindingResult, Model model){
+    public String addUser(@ModelAttribute("user") User user, BindingResult bindingResult, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         userValidator.validate(user, bindingResult);
 
         if(bindingResult.hasErrors()){
@@ -100,6 +100,10 @@ public class IndexController {
         user.setPassword(bCryptPasswordEncoder().encode(password));
         user.setConfirmPassword(null);
         userRepository.save(user);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth != null){
+            new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
+        }
         return "redirect:/login?signup";
     }
 
