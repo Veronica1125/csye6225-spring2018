@@ -130,7 +130,7 @@ public class IndexController {
         if(auth != null){
             new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
         }
-        return "redirect: /login?reset";
+        return "/login?reset";
     }
 
     @RequestMapping("/{email}/profile/pic.jpeg")
