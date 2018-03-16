@@ -39,7 +39,7 @@ after_success:
 deploy:
   - provider: s3
     local_dir: codedeploy_artifact
-    bucket: $s3bucketname
+    bucket: $S3BucketName
     region: us-east-1
     skip_cleanup: true
     access_key_id: $access_key_id
@@ -49,7 +49,7 @@ deploy:
 
   - provider: codedeploy
     access_key_id: $access_key_id
-    bucket: $s3bucketname
+    bucket: $S3BucketName
     key: csye6225-web-app-${TRAVIS_JOB_NUMBER}.zip
     bundle_type: zip
     application: csye6225-webapp
