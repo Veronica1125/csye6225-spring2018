@@ -1,21 +1,141 @@
-{
-  "Resources" : {
-    "IAMPolicy" : {
-	"Type": "AWS::IAM::Policy",
-	"Properties": {
-	    "PolicyName": "CodeDeploy-EC2-S3",
-	    "PolicyDocument": {
-            "Version" : "2012-10-17",
-            "Statement": [
-		    { "Effect": "Allow", "Action": "*", "Resource": "*" }
-		 ]
-	      },
-	      "Roles": [ { "Ref": "CodeDeployEC2ServiceRole " } ]
-	   }
-	},
+{  
+   "Parameters":{
+        "RESOURCE1" : {
+            "Type" : "String"
+        },
+        "RESOURCE2" : {
+            "Type" : "String"
+        },
+        "RESOURCE3" : {
+            "Type" : "String"
+        },
+        "RESOURCE4" : {
+            "Type" : "String"
+        }
+    },
 
-
-
-	
-}
+    "Resources":{
+        "CodeDeployEC2S3":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties":{
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": [
+                                "s3:Get*",
+                                "s3:List*"
+                            ],
+                            "Effect": "Allow",
+                            "Resource": "*"
+                        }
+                    ]
+                },
+                "PolicyName" :  "CodeDeployEC2S3",
+                "Roles" : [{"Ref":"CodeDeployEC2ServiceRole"}] 
+            }         
+        },
+        "TravisUploadToS3":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties":{
+                "PolicyDocument" : {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Action": [
+                                "s3:PutObject"
+                            ],
+                            "Resource": [
+                                "*"
+                            ]
+                        }
+                    ]
+                },
+                "PolicyName" :  "TravisUploadToS3",
+                "Users" : ["Travis-User"] 
+            }
+        },
+        "TravisCodeDeploy":{
+            "Type" : "AWS::IAM::Policy",
+            "Properties":{
+                "PolicyDocument":{
+                    "Version": "2012-10-17",
+                    "Statement": [
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "codedeploy:RegisterApplicationRevision",
+                          "codedeploy:GetApplicationRevision"
+                        ],
+                        "Resource": [
+                          {"Ref" : "RESOURCE1"}
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "codedeploy:CreateDeployment",
+                          "codedeploy:GetDeployment"
+                        ],
+                        "Resource": [
+                          "*"
+                        ]
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": [
+                          "codedeploy:GetDeploymentConfig"
+                        ],
+                        "Resource": [
+                            {"Ref" : "RESOURCE2"},
+                            {"Ref" : "RESOURCE3"},
+                            {"Ref" : "RESOURCE4"}
+                        ]
+                      }
+                    ]
+                  },
+                "PolicyName" :  "TravisCodeDeploy",
+                "Users" : ["Travis-User"]              
+            }
+        },
+        "CodeDeployEC2ServiceRole":{
+            "Type":"AWS::IAM::Role",
+            "Properties":{
+                "AssumeRolePolicyDocument": {
+                    "Version" : "2012-10-17",
+                    "Statement": [ {
+                       "Effect": "Allow",
+                       "Principal": {
+                          "Service": [ "ec2.amazonaws.com" ]
+                       },
+                       "Action": [ "sts:AssumeRole" ]
+                    } ]
+                 },
+                 "RoleName": "CodeDeployEC2ServiceRole" 
+            }
+        },
+        "CodeDeployServiceRole":{
+            "Type":"AWS::IAM::Role",
+            "Properties":{
+                "AssumeRolePolicyDocument":{
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "codedeploy.amazonaws.com"
+                                ]
+                            },
+                            "Action": "sts:AssumeRole"
+                        }
+                    ]
+                },
+                "RoleName":"CodeDeployServiceRole",
+                "ManagedPolicyArns":["arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"]
+            }
+        }
+    }
 }

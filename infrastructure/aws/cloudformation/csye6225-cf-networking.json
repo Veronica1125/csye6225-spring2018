@@ -60,6 +60,7 @@
          "Type" : "AWS::EC2::Subnet",
          "Properties" : {
             "VpcId" : { "Ref" : "VPC" },
+            "MapPublicIpOnLaunch" : "true",
             "CidrBlock" : "10.0.0.0/24",
             "AvailabilityZone" : "us-east-1a",
             "Tags" : [ { "Key" : "Name", "Value" : "SubnetForWebServers" } ]
@@ -88,10 +89,10 @@
             "RouteTableId" : { "Ref" : "PrivateRouteTable" }
          }
       },
-      "WebServerSecurityGroup" : {
+    "WebServerSecurityGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
- 	"GroupName":"WebServerSecurityGroup",
+ 	    "GroupName":"WebServerSecurityGroup",
         "GroupDescription" : "Enable TCP access via port 22, 80 and 443",
         "VpcId":{"Ref":"VPC"},
         "SecurityGroupIngress" : [ {
@@ -111,35 +112,36 @@
            "FromPort": "443",
            "ToPort": "443",
            "CidrIp": "0.0.0.0/0"
+         },
+         {
+          "IpProtocol": "tcp",
+          "FromPort": "8080",
+          "ToPort": "8080",
+          "CidrIp": "0.0.0.0/0"
          }
        ]
       }
     },
-      "DBServerSecurityGroup" : {
+    "DBServerSecurityGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
- 	"GroupName":"DBServerSecurityGroup",
+ 	    "GroupName":"DBServerSecurityGroup",
         "GroupDescription" : "Enable TCP access via port 3306",
         "VpcId":{"Ref":"VPC"},
         "SecurityGroupIngress" : [ {
           "IpProtocol" : "tcp",
           "FromPort" : "3306",
           "ToPort" : "3306",
-          "SourceSecurityGroupId" : {"Ref" : "WebServerSecurityGroup"}
+          "SourceSecurityGroupId" : {
+            "Fn::GetAtt": [
+							"WebServerSecurityGroup",
+							"GroupId"
+              ]
+          }
          }
        ]
       }
-    },    
-   "DBSecurityGroup": {
-   "Type": "AWS::RDS::DBSecurityGroup",
-   "Properties": {
-      "EC2VpcId" : { "Ref" : "VPC" },
-      "DBSecurityGroupIngress": [
-         {"EC2SecurityGroupId": { "Ref": "DBServerSecurityGroup"}}
-      ],
-      "GroupDescription": "Allow 3306 to DB"
-      }
-   }
+    } 
  },
   "Parameters" : {
 	"ParamPublicRouteTableName" : {
