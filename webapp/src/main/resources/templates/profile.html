@@ -12,15 +12,21 @@
     <p>User Profile</p>
     <p>Email Address: <span th:text="${user.email}"></span></p>
     <div>
-        <img width="150" height="150" th:src="@{/__${user.email}__/profile/pic.jpeg}" />
+        <div>
+            <img th:if="${defaultPic}"  width="150" height="150" th:href="@{https://image.freepik.com/free-icon/white-question-mark-on-a-black-circular-background_318-35996.jpg}" />
+            <img th:unless="${defaultPic}"  width="150" height="150" th:src="@{/__${user.email}__/profile/pic.jpeg}" />
+        </div>
+
         <br/>
         <form th:if="${edit}" th:action="@{/__${user.email}__/profile/updatepic}" method="post" enctype="multipart/form-data">
             <input type="file" name="updatepic" accept="image/*"/>
             <input type="submit" value="Update"/>
         </form>
+
         <form th:if="${edit}" th:action="@{/__${user.email}__/profile/deletepic}" method="post">
             <input type="submit" name="deletepic" value="Delete"/>
         </form>
+
         <div th:if="${picError}" class="alert alert-danger" role="alert" th:text="${picError}"></div>
     </div>
     <p>About Me:</p>

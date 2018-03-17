@@ -143,10 +143,15 @@ public class IndexController {
     }
 
     @RequestMapping("/{email}/profile/pic.jpeg")
-    public void getImage(@PathVariable String email, HttpServletResponse httpServletResponse) throws IOException {
+    public void getImage(@PathVariable String email, HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws IOException {
         User user  = userRepository.findUserByEmail(email);
         //byte[] pic = user.getImage();
         byte[] pic = s3BucketController.getFile(user.getEmail() + "ProfilePic");
+        if(pic == null || pic.length == 0){
+            httpServletRequest.setAttribute("defaultPic", true);
+        }else{
+            httpServletRequest.setAttribute("defaultPic", false);
+        }
         httpServletResponse.setContentType("image/jpeg");
         ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
         servletOutputStream.write(pic);
