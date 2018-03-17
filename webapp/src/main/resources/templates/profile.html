@@ -13,7 +13,7 @@
     <p>Email Address: <span th:text="${user.email}"></span></p>
     <div>
         <div>
-            <img th:if="${defaultPic}"  width="150" height="150" th:href="@{https://image.freepik.com/free-icon/white-question-mark-on-a-black-circular-background_318-35996.jpg}" />
+            <img th:if="${defaultPic}"  width="150" height="150" href="https://image.freepik.com/free-icon/white-question-mark-on-a-black-circular-background_318-35996.jpg" />
             <img th:unless="${defaultPic}"  width="150" height="150" th:src="@{/__${user.email}__/profile/pic.jpeg}" />
         </div>
 
