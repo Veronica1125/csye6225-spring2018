@@ -189,17 +189,13 @@ public class IndexController {
         User user = userRepository.findUserByEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("edit", true);
-        s3BucketController.uploadFile(user.getEmail(), multipartFile);
-        byte[] bfile = new byte[(int) multipartFile.getSize()];
-        if(bfile.length == 0){
+        if((int) multipartFile.getSize() == 0){
             model.addAttribute("picError", "No File Chosen!");
             return "profile";
         }
         try {
-            InputStream inputStream = multipartFile.getInputStream();
-            inputStream.read(bfile);
-            user.setImage(bfile);
-        } catch (IOException e) {
+            s3BucketController.uploadFile(user.getEmail(), multipartFile);
+        } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("picError","update profile picture failed!");
             return "profile";
@@ -212,8 +208,8 @@ public class IndexController {
         User user = userRepository.findUserByEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("edit", true);
-        user.setImage(null);
-        userRepository.save(user);
+        //user.setImage(null);
+        //userRepository.save(user);
         s3BucketController.deleteFile(user.getEmail() + "ProfilePic");
         return "redirect:/{email}/profile";
     }
