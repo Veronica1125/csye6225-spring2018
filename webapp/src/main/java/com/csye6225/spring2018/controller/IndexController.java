@@ -199,7 +199,7 @@ public class IndexController {
         model.addAttribute("edit", true);
         if((int) multipartFile.getSize() == 0){
             model.addAttribute("picError", "No File Chosen!");
-            return "profile";
+            return "redirect:/{email}/profile";
         }
         try {
             s3BucketController.uploadFile(user.getEmail(), multipartFile);
