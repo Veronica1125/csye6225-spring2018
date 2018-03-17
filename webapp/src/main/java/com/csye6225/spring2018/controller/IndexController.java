@@ -213,6 +213,7 @@ public class IndexController {
         model.addAttribute("edit", true);
         user.setImage(null);
         userRepository.save(user);
+        s3BucketController.deleteFile(user.getEmail() + "ProfilePic");
         return "redirect:/{email}/profile";
     }
 }
