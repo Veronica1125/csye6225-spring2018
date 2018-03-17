@@ -31,7 +31,7 @@ Yang Yuan  -  yuan.yang@husky.neu.edu
   <li>Gradle build tool</li>
   <li>Spring boot application</li>
   <li>JPA repository model</li>
-  <li>MySql database as storage</li>
+  <li>MySQL database as storage</li>
   <li>Spring security</li>
   <li> BCrypt password hashing scheme with salt</li>
   <li>Thymeleaf as server-side Java template engine</li>
