@@ -145,7 +145,8 @@ public class IndexController {
     @RequestMapping("/{email}/profile/pic.jpeg")
     public void getImage(@PathVariable String email, HttpServletResponse httpServletResponse) throws IOException {
         User user  = userRepository.findUserByEmail(email);
-        byte[] pic = user.getImage();
+        //byte[] pic = user.getImage();
+        byte[] pic = s3BucketController.getFile(user.getEmail() + "ProfilePic");
         httpServletResponse.setContentType("image/jpeg");
         ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
         servletOutputStream.write(pic);
