@@ -24,8 +24,9 @@ Yang Yuan  -  yuan.yang@husky.neu.edu
 <ul>
   <li>Travis CI</li>
 </ul>
+
 # Web Application
-<p>The web Application is implemented in:</p>
+<p>The web application is implemented in:</p>
 <ul>
   <li>Gradle build tool</li>
   <li>Spring boot application</li>
