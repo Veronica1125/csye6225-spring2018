@@ -47,6 +47,8 @@ public class IndexController {
         return new BCryptPasswordEncoder();
     }
 
+    private S3BucketController s3BucketController = new S3BucketController();
+
     @RequestMapping("/")
     public String index(Principal principal, Model model) {
         logger.info("Loading home page.");
@@ -186,6 +188,7 @@ public class IndexController {
         User user = userRepository.findUserByEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("edit", true);
+        s3BucketController.uploadFile(user.getEmail(), multipartFile);
         byte[] bfile = new byte[(int) multipartFile.getSize()];
         if(bfile.length == 0){
             model.addAttribute("picError", "No File Chosen!");
