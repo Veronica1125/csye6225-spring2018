@@ -45,7 +45,7 @@ deploy:
     access_key_id: $access_key_id
     secret_access_key: $secret_access_key
     on:
-      branch: assignment6
+      all_branches: true
 
   - provider: codedeploy
     access_key_id: $access_key_id
@@ -58,7 +58,7 @@ deploy:
     secret_access_key: $secret_access_key
     wait-until-deployed: true
     on:
-      branch: assignment6
+      all_branches: true
 
 notifications:
   username:
