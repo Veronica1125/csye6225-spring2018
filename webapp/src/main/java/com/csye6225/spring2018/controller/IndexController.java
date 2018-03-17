@@ -143,15 +143,10 @@ public class IndexController {
     }
 
     @RequestMapping("/{email}/profile/pic.jpeg")
-    public void getImage(@PathVariable String email, HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) throws IOException {
+    public void getImage(@PathVariable String email, HttpServletResponse httpServletResponse) throws IOException {
         User user  = userRepository.findUserByEmail(email);
         //byte[] pic = user.getImage();
         byte[] pic = s3BucketController.getFile(user.getEmail() + "ProfilePic");
-        if(pic == null || pic.length == 0){
-            httpServletRequest.setAttribute("defaultPic", true);
-        }else{
-            httpServletRequest.setAttribute("defaultPic", false);
-        }
         httpServletResponse.setContentType("image/jpeg");
         ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
         servletOutputStream.write(pic);
@@ -170,6 +165,14 @@ public class IndexController {
             model.addAttribute("edit", true);
         }
         User user = userRepository.findUserByEmail(email);
+        byte[] pic = s3BucketController.getFile(user.getEmail() + "ProfilePic");
+        if(pic == null || pic.length == 0){
+            model.addAttribute("defaultPic", true);
+            System.out.println("using default profile picture");
+        }else{
+            model.addAttribute("defaultPic", false);
+            System.out.println("using user's profile picture");
+        }
         model.addAttribute("user", user);
         return "profile";
     }
