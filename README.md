@@ -1,11 +1,16 @@
-# csye6225-spring2018 cloud computing team
+# CSYE6225-Spring2018 Cloud Computing Team
+
+[![Build Status](https://travis-ci.com/YichuanZhang/csye6225-spring2018.svg?token=tKA3sSWpCQ9Gbyx5A8dJ&branch=master)](https://travis-ci.com/YichuanZhang/csye6225-spring2018)
 <p>Team Member<p>
-<ul>
-  <li>Yichuan Zhang</li>
-  <li>Xiao Li</li>
-  <li>Yang Yuan</li>
-</ul>
-<p>Prerequisites for building and deploying WebApp</p>
+
+Yichuan Zhang  -  zhang.yichu@husky.neu.edu
+
+Xiao Li  -  li.xiao5@husky.neu.edu
+
+Yang Yuan  -  yuan.yang@husky.neu.edu
+
+
+# Prerequisites for building and deploying
 <ul>
   <li>Java 8</li>
   <li>Tomcat as server</li>
@@ -19,3 +24,15 @@
 <ul>
   <li>Travis CI</li>
 </ul>
+# Web Application
+<p>The web Application is implemented in:</p>
+<ul>
+  <li>Gradle build tool</li>
+  <li>Spring boot application</li>
+  <li>JPA repository model</li>
+  <li>MySql database as storage</li>
+  <li>Spring security</li>
+  <li> BCrypt password hashing scheme with salt</li>
+  <li>Thymeleaf as server-side Java template engine</li>
+  <li>Jmeter as load test</li>
+  <li>Travis CI as continuous integration</li>
