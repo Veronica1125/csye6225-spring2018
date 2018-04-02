@@ -1,4 +1,9 @@
 package com.csye6225.spring2018.controller;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.Topic;
 import com.csye6225.spring2018.pojo.User;
 import com.csye6225.spring2018.repository.UserRepository;
 import com.csye6225.spring2018.service.SecurityServiceImpl;
@@ -27,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class IndexController {
@@ -107,6 +113,26 @@ public class IndexController {
             new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
         }
         return "redirect:/login?signup";
+    }
+
+    @RequestMapping(value = "/snsrset", method = RequestMethod.GET)
+    public String snsRset(Principal principal){
+        User user = userRepository.findUserByEmail(principal.getName());
+        if(user != null){
+            AmazonSNS snsClient = AmazonSNSClientBuilder.standard()
+                    .withCredentials(new InstanceProfileCredentialsProvider(false))
+                    .build();
+            List<Topic> topics = snsClient.listTopics().getTopics();
+            for(Topic topic : topics){
+
+                if(topic.getTopicArn().endsWith("password_reset")){
+                    PublishRequest req = new PublishRequest(topic.getTopicArn(), user.getEmail());
+                    snsClient.publish(req);
+                    break;
+                }
+            }
+        }
+        return "/";
     }
 
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
