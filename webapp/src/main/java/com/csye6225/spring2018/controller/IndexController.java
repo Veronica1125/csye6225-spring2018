@@ -132,7 +132,7 @@ public class IndexController {
                 }
             }
         }
-        return "/";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
