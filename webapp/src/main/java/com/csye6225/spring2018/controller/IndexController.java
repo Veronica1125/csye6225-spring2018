@@ -115,7 +115,7 @@ public class IndexController {
         return "redirect:/login?signup";
     }
 
-    @RequestMapping(value = "/snsrset", method = RequestMethod.GET)
+    @RequestMapping(value = "/snsreset", method = RequestMethod.GET)
     public String snsRset(Principal principal){
         User user = userRepository.findUserByEmail(principal.getName());
         if(user != null){
