@@ -1,4 +1,10 @@
 package com.csye6225.spring2018.controller;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
+import com.amazonaws.services.sns.model.Topic;
 import com.csye6225.spring2018.pojo.User;
 import com.csye6225.spring2018.repository.UserRepository;
 import com.csye6225.spring2018.service.SecurityServiceImpl;
@@ -27,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class IndexController {
@@ -107,6 +114,28 @@ public class IndexController {
             new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
         }
         return "redirect:/login?signup";
+    }
+
+    @RequestMapping(value = "/snsreset", method = RequestMethod.GET)
+    public String snsRset(Principal principal){
+        User user = userRepository.findUserByEmail(principal.getName());
+        if(user != null){
+            AmazonSNS snsClient = AmazonSNSClientBuilder.standard()
+                    .withCredentials(new InstanceProfileCredentialsProvider(false))
+                    .build();
+            List<Topic> topics = snsClient.listTopics().getTopics();
+            System.out.println("resetting user email found: " + user.getEmail());
+            for(Topic topic : topics){
+                if(topic.getTopicArn().endsWith("password_reset")){
+                    PublishRequest req = new PublishRequest(topic.getTopicArn(), user.getEmail());
+                    PublishResult publishResult = snsClient.publish(req);
+                    System.out.println("MessageId - " + publishResult.getMessageId());
+                    break;
+                }
+            }
+
+        }
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
