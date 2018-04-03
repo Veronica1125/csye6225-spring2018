@@ -21,8 +21,9 @@ after_success:
   - mkdir codedeploy_artifact
   - cp infrastructure/aws/codedeploy/*.sh ./webapp
   - cp infrastructure/aws/codedeploy/*.yml ./webapp
+  - cp infrastructure/aws/cloudwatch/*.conf ./webapp
   - cd webapp
-  - zip -r csye6225-web-app-$TRAVIS_JOB_NUMBER.zip build/libs/ROOT.war *.sh *.yml
+  - zip -r csye6225-web-app-$TRAVIS_JOB_NUMBER.zip build/libs/ROOT.war *.sh *.yml awslogs.conf
   - mv csye6225-web-app-$TRAVIS_JOB_NUMBER.zip ../
   - cd ..
   - ls -al

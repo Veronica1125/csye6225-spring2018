@@ -15,7 +15,7 @@
 
     "Resources":{
         "CodeDeployEC2S3":{
-            "Type" : "AWS::IAM::Policy",
+            "Type" : "AWS::IAM::ManagedPolicy",
             "Properties":{
                 "PolicyDocument" : {
                     "Version": "2012-10-17",
@@ -29,8 +29,7 @@
                         }
                     ]
                 },
-                "PolicyName" :  "CodeDeployEC2S3",
-                "Roles" : [{"Ref":"CodeDeployEC2ServiceRole"}] 
+                "ManagedPolicyName" :  "CodeDeployEC2S3"
             }         
         },
         "TravisUploadToS3":{
@@ -110,7 +109,13 @@
                        "Action": [ "sts:AssumeRole" ]
                     } ]
                  },
-                 "RoleName": "CodeDeployEC2ServiceRole" 
+                 "RoleName": "CodeDeployEC2ServiceRole" ,
+                 "ManagedPolicyArns": [
+                    {"Ref": "CodeDeployEC2S3"},
+					{"Ref": "CloudWatchLogPolicy"},
+					"arn:aws:iam::aws:policy/AmazonS3FullAccess",
+					"arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+				]
             }
         },
         "CodeDeployServiceRole":{
