@@ -126,7 +126,6 @@ public class IndexController {
             List<Topic> topics = snsClient.listTopics().getTopics();
             System.out.println("resetting user email found: " + user.getEmail());
             for(Topic topic : topics){
-
                 if(topic.getTopicArn().endsWith("password_reset")){
                     PublishRequest req = new PublishRequest(topic.getTopicArn(), user.getEmail());
                     PublishResult publishResult = snsClient.publish(req);
