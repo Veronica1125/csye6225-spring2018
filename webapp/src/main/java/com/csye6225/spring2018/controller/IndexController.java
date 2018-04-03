@@ -128,9 +128,11 @@ public class IndexController {
                 if(topic.getTopicArn().endsWith("password_reset")){
                     PublishRequest req = new PublishRequest(topic.getTopicArn(), user.getEmail());
                     snsClient.publish(req);
+                    System.out.println("trying to send an email");
                     break;
                 }
             }
+
         }
         return "redirect:/";
     }
