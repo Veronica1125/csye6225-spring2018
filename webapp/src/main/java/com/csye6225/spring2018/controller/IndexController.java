@@ -3,6 +3,7 @@ import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
 import com.amazonaws.services.sns.model.Topic;
 import com.csye6225.spring2018.pojo.User;
 import com.csye6225.spring2018.repository.UserRepository;
@@ -123,12 +124,13 @@ public class IndexController {
                     .withCredentials(new InstanceProfileCredentialsProvider(false))
                     .build();
             List<Topic> topics = snsClient.listTopics().getTopics();
+            System.out.println("resetting user email found: " + user.getEmail());
             for(Topic topic : topics){
 
                 if(topic.getTopicArn().endsWith("password_reset")){
                     PublishRequest req = new PublishRequest(topic.getTopicArn(), user.getEmail());
-                    snsClient.publish(req);
-                    System.out.println("trying to send an email");
+                    PublishResult publishResult = snsClient.publish(req);
+                    System.out.println("MessageId - " + publishResult.getMessageId());
                     break;
                 }
             }
