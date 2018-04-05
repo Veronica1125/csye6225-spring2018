@@ -70,7 +70,45 @@
           "chmod 777 -R /tmp\n",
           "chmod 777 /var/lib/tomcat8 \n",
           "chmod 777 /var/lib/tomcat8/webapps\n",
-          "sudo service tomcat8 restart\n"
+          "sudo service tomcat8 restart\n",
+          "sudo apt-get update\n",
+          "sudo touch /tmp/awslogs.conf\n",
+          "sudo echo '[general]' > /tmp/awslogs.conf\n",
+          "sudo echo 'state_file= /var/awslogs/agent-state' >> /tmp/awslogs.conf\n",
+          "sudo echo '[logstream1]' >> /tmp/awslogs.conf\n",
+          "sudo echo 'file = /var/log/tomcat8/csye6225-aws.log' >> /tmp/awslogs.conf\n",
+          "sudo echo 'log_group_name = csye6225-webapp' >> /tmp/awslogs.conf\n",
+          "sudo echo 'log_stream_name = csye6225-webapp' >> /tmp/awslogs.conf\n",
+          "sudo echo 'datetime_format = %d/%b/%Y:%H:%M:%S' >> /tmp/awslogs.conf\n",
+          "curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O\n",
+          {
+              "Fn::Join": [
+                  " ",
+                  [
+                      "sudo python ./awslogs-agent-setup.py -n -r",
+                      {
+                          "Ref": "AWS::Region"
+                      },
+                      "-c /tmp/awslogs.conf || error_exit 'Failed to run CloudWatch Logs agent setup'\n"
+                  ]
+              ]
+          },
+          "cd /etc/systemd/system\n",
+          "sudo touch awslogs.service\n",
+          "sudo echo '[Unit]' >> awslogs.service\n",
+          "sudo echo 'Description=Service for CloudWatch Logs agent' >> awslogs.service\n",
+          "sudo echo 'After=rc-local.service' >> awslogs.service\n",
+          "sudo echo '[Service]' >> awslogs.service\n",
+          "sudo echo 'Type=simple' >> awslogs.service\n",
+          "sudo echo 'Restart=always' >> awslogs.service\n",
+          "sudo echo 'KillMode=process' >> awslogs.service\n",
+          "sudo echo 'TimeoutSec=infinity' >> awslogs.service\n",
+          "sudo echo 'PIDFile=/var/awslogs/state/awslogs.pid' >> awslogs.service\n",
+          "sudo echo 'ExecStart=/var/awslogs/bin/awslogs-agent-launcher.sh --start --background --pidfile $PIDFILE --user awslogs --chuid awslogs &amp;' >> awslogs.service\n",
+          "sudo echo '[Install]' >> awslogs.service\n",
+          "sudo echo 'WantedBy=multi-user.target' >> awslogs.service\n",
+          "sudo systemctl start awslogs.service\n",
+          "sudo systemctl enable awslogs.service\n"          
         ]
       ]
     }
@@ -141,7 +179,16 @@
             }
             
         }
-}
+      },
+
+      "MySNSTopic": {
+        "Type": "AWS::SNS::Topic",
+        "Properties": {
+          "TopicName": {
+            "Ref": "TopicName"
+          }
+        }
+      }
        
   },
   
@@ -166,6 +213,10 @@
         },
         "S3BucketName" : {
           "Type" : "String"
+        },
+        "TopicName": {
+          "Type": "String"
         }
+
  }  
 }

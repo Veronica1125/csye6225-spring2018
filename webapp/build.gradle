@@ -56,6 +56,8 @@ dependencies {
     compile('org.apache.httpcomponents:httpclient:+')
     compile('com.google.code.gson:gson:+')
 
+    compile('com.amazonaws:aws-java-sdk:+')
+
     compile('org.apache.tomcat.embed:tomcat-embed-jasper')
 
     runtime('org.springframework.boot:spring-boot-devtools')
