@@ -88,7 +88,8 @@
             "SubnetId" : { "Ref" : "SubnetForDBServers" },
             "RouteTableId" : { "Ref" : "PrivateRouteTable" }
          }
-      },
+    },
+
     "WebServerSecurityGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
@@ -122,6 +123,39 @@
        ]
       }
     },
+
+    "LoadBalancerSecurityGroup": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupName":  "ALB_SG",
+				"GroupDescription": "Enable HTTP access via port 80, SSH access via port 22",
+				"VpcId": {
+					"Ref": "Vpc"
+				},
+				"SecurityGroupIngress": [
+					{
+						"IpProtocol": "tcp",
+						"FromPort": "443",
+						"ToPort": "443",
+						"CidrIp": "0.0.0.0/0"
+					}
+				],
+			    "SecurityGroupEgress": [
+					{
+						"IpProtocol":"tcp",
+						"FromPort":"8080",
+						"ToPort":"8080",
+						"DestinationSecurityGroupId":{
+							"Fn::GetAtt":[
+								"WebServerSecurityGroup",
+								"GroupId"
+							]
+						}
+					}
+				]
+			}
+    },
+
     "DBServerSecurityGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
