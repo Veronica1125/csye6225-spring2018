@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 sudo cp /home/ubuntu/awslogs.conf /var/awslogs/etc/
