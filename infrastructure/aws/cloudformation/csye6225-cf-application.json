@@ -16,9 +16,8 @@
         "AssociatePublicIpAddress": "true",
         "InstanceType" : "t2.micro",
         "ImageId" : "ami-66506c1c",
-        "DisableApiTermination" : "false",
 	      "KeyName" : "csye6225.pub",
-	      "SecurityGroupIds" : [ {"Ref" : "WebServerSecurityGroupID"}],
+	      "SecurityGroups" : [ {"Ref" : "WebServerSecurityGroupID"}],
         "BlockDeviceMappings" : [
           {
             "DeviceName" : "/dev/sda1",
