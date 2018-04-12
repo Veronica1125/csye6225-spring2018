@@ -94,7 +94,7 @@
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
  	    "GroupName":"WebServerSecurityGroup",
-        "GroupDescription" : "Enable TCP access via port 22, 80 and 443",
+        "GroupDescription" : "Enable TCP access via port 22 and 80",
         "VpcId":{"Ref":"VPC"},
         "SecurityGroupIngress" : [ {
           "IpProtocol" : "tcp",
@@ -106,20 +106,35 @@
            "IpProtocol": "tcp",
            "FromPort": "80",
            "ToPort": "80",
-           "CidrIp": "0.0.0.0/0"
-         },
-         {
-           "IpProtocol": "tcp",
-           "FromPort": "443",
-           "ToPort": "443",
-           "CidrIp": "0.0.0.0/0"
+           "SourceSecurityGroupId":{
+            "Fn::GetAtt":[
+              "LoadBalancerSecurityGroup",
+              "GroupId"
+            ]
+          }
          },
          {
           "IpProtocol": "tcp",
           "FromPort": "8080",
           "ToPort": "8080",
-          "CidrIp": "0.0.0.0/0"
+          "SourceSecurityGroupId":{
+           "Fn::GetAtt":[
+             "LoadBalancerSecurityGroup",
+             "GroupId"
+           ]
          }
+        },
+        {
+          "IpProtocol": "tcp",
+          "FromPort": "443",
+          "ToPort": "443",
+          "SourceSecurityGroupId":{
+           "Fn::GetAtt":[
+             "LoadBalancerSecurityGroup",
+             "GroupId"
+           ]
+         }
+        }
        ]
       }
     },
@@ -128,31 +143,24 @@
 			"Type": "AWS::EC2::SecurityGroup",
 			"Properties": {
 				"GroupName":  "ALB_SG",
-				"GroupDescription": "Enable HTTP access via port 80, SSH access via port 22",
+				"GroupDescription": "Enable HTTP access via port 80, HTTPS via port 443",
 				"VpcId": {
 					"Ref": "VPC"
 				},
 				"SecurityGroupIngress": [
-					{
-						"IpProtocol": "tcp",
-						"FromPort": "443",
-						"ToPort": "443",
-						"CidrIp": "0.0.0.0/0"
-					}
-				],
-			    "SecurityGroupEgress": [
-					{
-						"IpProtocol":"tcp",
-						"FromPort":"8080",
-						"ToPort":"8080",
-						"DestinationSecurityGroupId":{
-							"Fn::GetAtt":[
-								"WebServerSecurityGroup",
-								"GroupId"
-							]
-						}
-					}
-				]
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "443",
+            "ToPort": "443",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
 			}
     },
 

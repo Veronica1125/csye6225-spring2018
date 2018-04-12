@@ -140,10 +140,7 @@
 				}],
 				"VPCZoneIdentifier" :[{
 					"Ref": "ParamWEBSERVERSUBNETID"
-				  },
-					{
-						"Ref": "ParamDBSERVERSUBNETID"
-					}
+				  }
 				]
 			},
 			"DependsOn": "ALBListener"
@@ -182,6 +179,18 @@
 						}
 					}
 				]
+			}
+    },
+    "ALBListener2" : {
+			"Type" : "AWS::ElasticLoadBalancingV2::Listener",
+			"Properties" : {
+				"DefaultActions" : [{
+					"Type" : "forward",
+					"TargetGroupArn" : { "Ref" : "ALBTargetGroup" }
+				}],
+				"LoadBalancerArn" : { "Ref" : "LoadBalancer" },
+				"Port" : "80",
+				"Protocol" : "HTTP"
 			}
 		},
 		"ALBTargetGroup" : {
