@@ -16,23 +16,21 @@
 
     "Resources":{
         "CodeDeployEC2S3":{
-            "Type" : "AWS::IAM::Policy",
+            "Type" : "AWS::IAM::ManagedPolicy",
             "Properties":{
                 "PolicyDocument" : {
                     "Version": "2012-10-17",
                     "Statement": [
                         {
                             "Action": [
-                                "s3:Get*",
-                                "s3:List*"
+                                "s3:*"
                             ],
                             "Effect": "Allow",
                             "Resource": "*"
                         }
                     ]
                 },
-                "PolicyName" :  "CodeDeployEC2S3",
-                "Roles" : [{"Ref":"CodeDeployEC2ServiceRole"}] 
+                "ManagedPolicyName" :  "CodeDeployEC2S3"
             }         
         },
         "TravisUploadToS3":{
@@ -112,7 +110,13 @@
                        "Action": [ "sts:AssumeRole" ]
                     } ]
                  },
-                 "RoleName": "CodeDeployEC2ServiceRole" 
+                 "RoleName": "CodeDeployEC2ServiceRole" ,
+                 "ManagedPolicyArns": [
+                    {"Ref": "CodeDeployEC2S3"},
+					{"Ref": "CloudWatchLogPolicy"},
+					"arn:aws:iam::aws:policy/AmazonS3FullAccess",
+					"arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+				]
             }
         },
         "CodeDeployServiceRole":{
@@ -136,6 +140,55 @@
                 "RoleName":"CodeDeployServiceRole",
                 "ManagedPolicyArns":["arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"]
             }
+        },
+        "LambdaExecutionRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [{
+						"Effect": "Allow",
+						"Principal": {
+							"Service": [
+								"lambda.amazonaws.com"
+							]
+						},
+						"Action": [
+							"sts:AssumeRole"
+						]
+					}]
+				},
+				"Path": "/",
+				"ManagedPolicyArns": [
+					"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+					"arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+					"arn:aws:iam::aws:policy/AmazonSESFullAccess",
+					"arn:aws:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole"
+				],
+				"RoleName": "LambdaExecutionRole"
+			}
+        },
+        "CloudWatchLogPolicy": {
+			"Type": "AWS::IAM::ManagedPolicy",
+			"Properties": {
+				"ManagedPolicyName": "CloudWatchPolicyName",
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Action": [
+								"logs:CreateLogGroup",
+								"logs:CreateLogStream",
+								"logs:PutLogEvents",
+								"logs:DescribeLogStreams"
+							],
+							"Resource": [
+								"arn:aws:logs:*:*:*"
+							]
+						}]
+				}
+			}
         }
     }
 }

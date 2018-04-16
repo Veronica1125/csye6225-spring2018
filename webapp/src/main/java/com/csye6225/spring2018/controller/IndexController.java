@@ -1,4 +1,10 @@
 package com.csye6225.spring2018.controller;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
+import com.amazonaws.services.sns.model.Topic;
 import com.csye6225.spring2018.pojo.User;
 import com.csye6225.spring2018.repository.UserRepository;
 import com.csye6225.spring2018.service.SecurityServiceImpl;
@@ -27,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class IndexController {
@@ -46,6 +53,8 @@ public class IndexController {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    private S3BucketController s3BucketController = new S3BucketController();
 
     @RequestMapping("/")
     public String index(Principal principal, Model model) {
@@ -107,6 +116,28 @@ public class IndexController {
         return "redirect:/login?signup";
     }
 
+    @RequestMapping(value = "/snsreset", method = RequestMethod.GET)
+    public String snsRset(Principal principal){
+        User user = userRepository.findUserByEmail(principal.getName());
+        if(user != null){
+            AmazonSNS snsClient = AmazonSNSClientBuilder.standard()
+                    .withCredentials(new InstanceProfileCredentialsProvider(false))
+                    .build();
+            List<Topic> topics = snsClient.listTopics().getTopics();
+            System.out.println("resetting user email found: " + user.getEmail());
+            for(Topic topic : topics){
+                if(topic.getTopicArn().endsWith("password_reset")){
+                    PublishRequest req = new PublishRequest(topic.getTopicArn(), user.getEmail());
+                    PublishResult publishResult = snsClient.publish(req);
+                    System.out.println("MessageId - " + publishResult.getMessageId());
+                    break;
+                }
+            }
+
+        }
+        return "redirect:/";
+    }
+
     @RequestMapping(value = "/reset", method = RequestMethod.GET)
     public String reset(){
         return "reset";
@@ -143,7 +174,8 @@ public class IndexController {
     @RequestMapping("/{email}/profile/pic.jpeg")
     public void getImage(@PathVariable String email, HttpServletResponse httpServletResponse) throws IOException {
         User user  = userRepository.findUserByEmail(email);
-        byte[] pic = user.getImage();
+        //byte[] pic = user.getImage();
+        byte[] pic = s3BucketController.getFile(user.getEmail() + "ProfilePic");
         httpServletResponse.setContentType("image/jpeg");
         ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
         servletOutputStream.write(pic);
@@ -162,6 +194,14 @@ public class IndexController {
             model.addAttribute("edit", true);
         }
         User user = userRepository.findUserByEmail(email);
+        byte[] pic = s3BucketController.getFile(user.getEmail() + "ProfilePic");
+        if(pic == null || pic.length == 0){
+            model.addAttribute("defaultPic", true);
+            System.out.println("using default profile picture");
+        }else{
+            model.addAttribute("defaultPic", false);
+            System.out.println("using user's profile picture");
+        }
         model.addAttribute("user", user);
         return "profile";
     }
@@ -186,16 +226,13 @@ public class IndexController {
         User user = userRepository.findUserByEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("edit", true);
-        byte[] bfile = new byte[(int) multipartFile.getSize()];
-        if(bfile.length == 0){
+        if((int) multipartFile.getSize() == 0){
             model.addAttribute("picError", "No File Chosen!");
-            return "profile";
+            return "redirect:/{email}/profile";
         }
         try {
-            InputStream inputStream = multipartFile.getInputStream();
-            inputStream.read(bfile);
-            user.setImage(bfile);
-        } catch (IOException e) {
+            s3BucketController.uploadFile(user.getEmail(), multipartFile);
+        } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("picError","update profile picture failed!");
             return "profile";
@@ -208,8 +245,9 @@ public class IndexController {
         User user = userRepository.findUserByEmail(email);
         model.addAttribute("user", user);
         model.addAttribute("edit", true);
-        user.setImage(null);
-        userRepository.save(user);
+        //user.setImage(null);
+        //userRepository.save(user);
+        s3BucketController.deleteFile(user.getEmail() + "ProfilePic");
         return "redirect:/{email}/profile";
     }
 }
