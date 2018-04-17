@@ -22,6 +22,7 @@ after_success:
   - cp infrastructure/aws/codedeploy/*.sh ./webapp
   - cp infrastructure/aws/codedeploy/*.yml ./webapp
   - cp infrastructure/aws/cloudwatch/*.conf ./webapp
+  - cp infrastructure/aws/cloudwatch/*.sh ./webapp
   - cd webapp
   - zip -r csye6225-web-app-$TRAVIS_JOB_NUMBER.zip build/libs/ROOT.war *.sh *.yml awslogs.conf
   - mv csye6225-web-app-$TRAVIS_JOB_NUMBER.zip ../

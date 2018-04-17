@@ -11,114 +11,224 @@
 			}
     },
     "WebServer":{
-      "Type" : "AWS::EC2::Instance",
+      "Type" : "AWS::AutoScaling::LaunchConfiguration",
       "Properties" : {
+        "AssociatePublicIpAddress": "true",
         "InstanceType" : "t2.micro",
         "ImageId" : "ami-66506c1c",
-        "DisableApiTermination" : "false",
 	      "KeyName" : "csye6225.pub",
-        "SubnetId" : {"Ref" : "ParamWEBSERVERSUBNETID"},
-	"SecurityGroupIds" : [ {"Ref" : "WebServerSecurityGroupID"}],
-	"BlockDeviceMappings" : [
-	  {
-	    "DeviceName" : "/dev/sda1",
-	    "Ebs" : {
-		"VolumeSize" : "16",
-		"VolumeType" : "gp2"
-	    }
-	  }
-  ],
-  "UserData" : {
-    "Fn::Base64": {
-    "Fn::Join": [
-      "",
-        [
-          "#!/bin/bash -xe \n",
-          "sudo apt-get update \n",
-          "sudo apt-get install default-jre -y \n",
-          "java -version \n",
-          "sudo apt-get install tomcat8 -y \n",
-          "sudo service tomcat8 restart \n",
-          "sudo apt-get update \n",
-          "sudo apt-get install ruby -y \n",
-          "sudo apt-get install wget -y \n",
-          "sudo apt-get install python -y \n",
-          "sudo apt-get update \n",
-          "sudo wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install \n",
-          "sudo chmod +x ./install \n",
-          "sudo ./install auto \n",
-          "sudo service codedeploy-agent start \n",
-          "sudo service codedeploy-agent status \n",
-          "echo '#!/bin/sh' >> /usr/share/tomcat8/bin/setenv.sh \n",
+	      "SecurityGroups" : [ {"Ref" : "WebServerSecurityGroupID"}],
+        "BlockDeviceMappings" : [
           {
-            "Fn::Sub": "sudo echo \"JAVA_OPTS=\\\"\\$JAVA_OPTS -Dspring.profiles.active=aws\\\"\" >> /etc/default/tomcat  \n"
-          },
-          {
-            "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${DBServer.Endpoint.Address}:3306/csye6225\"' >> /usr/share/tomcat8/bin/setenv.sh \n"
-          },
-          {
-            "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.username=${DBUser}\"' >> /usr/share/tomcat8/bin/setenv.sh \n"
-          },
-          {
-            "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=${DBPassword}\"' >> /usr/share/tomcat8/bin/setenv.sh \n"
-          },
-          {
-            "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${S3BucketName}\"' >> /usr/share/tomcat8/bin/setenv.sh \n"
-          },
-          "chmod +x /usr/share/tomcat8/bin/setenv.sh\n",
-          "chown tomcat8:tomcat8 /usr/share/tomcat8/bin/setenv.sh\n",
-          "chmod 777 -R /tmp\n",
-          "chmod 777 /var/lib/tomcat8 \n",
-          "chmod 777 /var/lib/tomcat8/webapps\n",
-          "sudo service tomcat8 restart\n",
-          "sudo apt-get update\n",
-          "sudo touch /tmp/awslogs.conf\n",
-          "sudo echo '[general]' > /tmp/awslogs.conf\n",
-          "sudo echo 'state_file= /var/awslogs/agent-state' >> /tmp/awslogs.conf\n",
-          "sudo echo '[logstream1]' >> /tmp/awslogs.conf\n",
-          "sudo echo 'file = /var/log/tomcat8/csye6225-aws.log' >> /tmp/awslogs.conf\n",
-          "sudo echo 'log_group_name = csye6225-webapp' >> /tmp/awslogs.conf\n",
-          "sudo echo 'log_stream_name = csye6225-webapp' >> /tmp/awslogs.conf\n",
-          "sudo echo 'datetime_format = %d/%b/%Y:%H:%M:%S' >> /tmp/awslogs.conf\n",
-          "curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O\n",
-          {
-              "Fn::Join": [
-                  " ",
-                  [
-                      "sudo python ./awslogs-agent-setup.py -n -r",
-                      {
-                          "Ref": "AWS::Region"
-                      },
-                      "-c /tmp/awslogs.conf || error_exit 'Failed to run CloudWatch Logs agent setup'\n"
-                  ]
+            "DeviceName" : "/dev/sda1",
+            "Ebs" : {
+          "VolumeSize" : "16",
+          "VolumeType" : "gp2"
+            }
+          }
+        ],
+        "UserData" : {
+          "Fn::Base64": {
+          "Fn::Join": [
+            "",
+              [
+                "#!/bin/bash -xe \n",
+                "sudo apt-get update \n",
+                "sudo apt-get install default-jre -y \n",
+                "java -version \n",
+                "sudo apt-get install tomcat8 -y \n",
+                "sudo service tomcat8 restart \n",
+                "sudo apt-get update \n",
+                "sudo apt-get install ruby -y \n",
+                "sudo apt-get install wget -y \n",
+                "sudo apt-get install python -y \n",
+                "sudo apt-get update \n",
+                "sudo wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install \n",
+                "sudo chmod +x ./install \n",
+                "sudo ./install auto \n",
+                "sudo service codedeploy-agent start \n",
+                "sudo service codedeploy-agent status \n",
+                "echo '#!/bin/sh' >> /usr/share/tomcat8/bin/setenv.sh \n",
+                {
+                  "Fn::Sub": "sudo echo \"JAVA_OPTS=\\\"\\$JAVA_OPTS -Dspring.profiles.active=aws\\\"\" >> /etc/default/tomcat  \n"
+                },
+                {
+                  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${DBServer.Endpoint.Address}:3306/csye6225\"' >> /usr/share/tomcat8/bin/setenv.sh \n"
+                },
+                {
+                  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.username=${DBUser}\"' >> /usr/share/tomcat8/bin/setenv.sh \n"
+                },
+                {
+                  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=${DBPassword}\"' >> /usr/share/tomcat8/bin/setenv.sh \n"
+                },
+                {
+                  "Fn::Sub": "echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${S3BucketName}\"' >> /usr/share/tomcat8/bin/setenv.sh \n"
+                },
+                "chmod +x /usr/share/tomcat8/bin/setenv.sh\n",
+                "chown tomcat8:tomcat8 /usr/share/tomcat8/bin/setenv.sh\n",
+                "chmod 777 -R /tmp\n",
+                "chmod 777 /var/lib/tomcat8 \n",
+                "chmod 777 /var/lib/tomcat8/webapps\n",
+                "sudo service tomcat8 restart\n",
+                "sudo apt-get update\n",
+                "sudo touch /tmp/awslogs.conf\n",
+                "sudo echo '[general]' > /tmp/awslogs.conf\n",
+                "sudo echo 'state_file= /var/awslogs/agent-state' >> /tmp/awslogs.conf\n",
+                "sudo echo '[logstream1]' >> /tmp/awslogs.conf\n",
+                "sudo echo 'file = /var/log/tomcat8/csye6225-aws.log' >> /tmp/awslogs.conf\n",
+                "sudo echo 'log_group_name = csye6225-webapp' >> /tmp/awslogs.conf\n",
+                "sudo echo 'log_stream_name = csye6225-webapp' >> /tmp/awslogs.conf\n",
+                "sudo echo 'datetime_format = %d/%b/%Y:%H:%M:%S' >> /tmp/awslogs.conf\n",
+                "curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O\n",
+                {
+                    "Fn::Join": [
+                        " ",
+                        [
+                            "sudo python ./awslogs-agent-setup.py -n -r",
+                            {
+                                "Ref": "AWS::Region"
+                            },
+                            "-c /tmp/awslogs.conf || error_exit 'Failed to run CloudWatch Logs agent setup'\n"
+                        ]
+                    ]
+                },
+                "cd /etc/systemd/system\n",
+                "sudo touch awslogs.service\n",
+                "sudo echo '[Unit]' >> awslogs.service\n",
+                "sudo echo 'Description=Service for CloudWatch Logs agent' >> awslogs.service\n",
+                "sudo echo 'After=rc-local.service' >> awslogs.service\n",
+                "sudo echo '[Service]' >> awslogs.service\n",
+                "sudo echo 'Type=simple' >> awslogs.service\n",
+                "sudo echo 'Restart=always' >> awslogs.service\n",
+                "sudo echo 'KillMode=process' >> awslogs.service\n",
+                "sudo echo 'TimeoutSec=infinity' >> awslogs.service\n",
+                "sudo echo 'PIDFile=/var/awslogs/state/awslogs.pid' >> awslogs.service\n",
+                "sudo echo 'ExecStart=/var/awslogs/bin/awslogs-agent-launcher.sh --start --background --pidfile $PIDFILE --user awslogs --chuid awslogs &amp;' >> awslogs.service\n",
+                "sudo echo '[Install]' >> awslogs.service\n",
+                "sudo echo 'WantedBy=multi-user.target' >> awslogs.service\n",
+                "sudo systemctl start awslogs.service\n",
+                "sudo systemctl enable awslogs.service\n"          
               ]
-          },
-          "cd /etc/systemd/system\n",
-          "sudo touch awslogs.service\n",
-          "sudo echo '[Unit]' >> awslogs.service\n",
-          "sudo echo 'Description=Service for CloudWatch Logs agent' >> awslogs.service\n",
-          "sudo echo 'After=rc-local.service' >> awslogs.service\n",
-          "sudo echo '[Service]' >> awslogs.service\n",
-          "sudo echo 'Type=simple' >> awslogs.service\n",
-          "sudo echo 'Restart=always' >> awslogs.service\n",
-          "sudo echo 'KillMode=process' >> awslogs.service\n",
-          "sudo echo 'TimeoutSec=infinity' >> awslogs.service\n",
-          "sudo echo 'PIDFile=/var/awslogs/state/awslogs.pid' >> awslogs.service\n",
-          "sudo echo 'ExecStart=/var/awslogs/bin/awslogs-agent-launcher.sh --start --background --pidfile $PIDFILE --user awslogs --chuid awslogs &amp;' >> awslogs.service\n",
-          "sudo echo '[Install]' >> awslogs.service\n",
-          "sudo echo 'WantedBy=multi-user.target' >> awslogs.service\n",
-          "sudo systemctl start awslogs.service\n",
-          "sudo systemctl enable awslogs.service\n"          
-        ]
-      ]
-    }
-  },
-  "IamInstanceProfile": {
-    "Ref": "CodeDeployEC2ServiceRoleInstanceProfile"
-  },
-  "Tags" : [ { "Key" : "Name", "Value" : "WebServer" } ]
-       }
-      },
+            ]
+          }
+        },
+        "IamInstanceProfile": {
+          "Ref": "CodeDeployEC2ServiceRoleInstanceProfile"
+        }
+      }
+    },
+
+    "WebServerGroup" : {
+			"Type" : "AWS::AutoScaling::AutoScalingGroup",
+			"Properties" : {
+				"LaunchConfigurationName" : { "Ref" : "WebServer" },
+				"MinSize" : "3",
+				"DesiredCapacity" : "3",
+				"MaxSize" : "7",
+				"TargetGroupARNs": [{
+					"Ref": "ALBTargetGroup"
+				}
+				],
+				"Tags": [{
+					"Key": {
+						"Ref": "TagKey"
+					},
+					"Value": {
+						"Ref": "TagValue"
+					},
+					"PropagateAtLaunch" : "true"
+				}],
+				"VPCZoneIdentifier" :[{
+					"Ref": "ParamWEBSERVERSUBNETID"
+				  }
+				]
+			},
+			"DependsOn": "ALBListener"
+    },
+
+		"LoadBalancer": {
+			"Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+			"Properties": {
+				"Name": {"Ref":"LoadBalancerName"},
+				"Scheme": "internet-facing",
+				"Subnets": [{
+					"Ref": "ParamWEBSERVERSUBNETID"
+				},
+					{
+						"Ref": "ParamDBSERVERSUBNETID"
+					}],
+				"SecurityGroups":[{"Ref":"LoadBalancerSecurityGroupID"}],
+				"Type": "application",
+				"IpAddressType": "ipv4"
+			}
+		},
+		"ALBListener" : {
+			"Type" : "AWS::ElasticLoadBalancingV2::Listener",
+			"Properties" : {
+				"DefaultActions" : [{
+					"Type" : "forward",
+					"TargetGroupArn" : { "Ref" : "ALBTargetGroup" }
+				}],
+				"LoadBalancerArn" : { "Ref" : "LoadBalancer" },
+				"Port" : "443",
+				"Protocol" : "HTTPS",
+				"Certificates": [
+					{
+						"CertificateArn": {
+							"Ref": "CertificateArn1"
+						}
+					}
+				]
+			}
+    },
+    "ALBListener2" : {
+			"Type" : "AWS::ElasticLoadBalancingV2::Listener",
+			"Properties" : {
+				"DefaultActions" : [{
+					"Type" : "forward",
+					"TargetGroupArn" : { "Ref" : "ALBTargetGroup" }
+				}],
+				"LoadBalancerArn" : { "Ref" : "LoadBalancer" },
+				"Port" : "80",
+				"Protocol" : "HTTP"
+			}
+		},
+		"ALBTargetGroup" : {
+			"Type" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+			"Properties" : {
+				"HealthCheckIntervalSeconds" : 30,
+				"UnhealthyThresholdCount" : 10,
+				"HealthCheckPath" : "/",
+				"TargetGroupAttributes": [{
+					"Key": "deregistration_delay.timeout_seconds",
+					"Value": "20"
+				}],
+				"Name" : "MyTargetGroup",
+				"HealthCheckPort" : 8080,
+				"TargetType": "instance",
+				"Port" : 8080,
+				"Protocol" : "HTTP",
+				"VpcId" : { "Ref": "ParamVpcId" }
+			}
+    },
+
+    "ResourceRecords": {
+			"Type": "AWS::Route53::RecordSet",
+			"Properties": {
+				"HostedZoneId": {
+					"Ref": "HostedZoneId"
+				},
+				"Name": {
+					"Ref": "Name"
+				},
+				"AliasTarget" : {
+					"HostedZoneId" : { "Fn::GetAtt" : ["LoadBalancer", "CanonicalHostedZoneID"] },
+					"DNSName" : { "Fn::GetAtt" : ["LoadBalancer","DNSName"] }
+				},
+				"Type": "A"
+			}
+    },
+    
 
     "DynamoDBTable" : {
       "Type" : "AWS::DynamoDB::Table",
@@ -188,7 +298,83 @@
             "Ref": "TopicName"
           }
         }
+      },
+
+      "WebServerScaleUpPolicy": {
+        "Type": "AWS::AutoScaling::ScalingPolicy",
+        "Properties": {
+          "AdjustmentType": "ChangeInCapacity",
+          "AutoScalingGroupName": {
+            "Ref": "WebServerGroup"
+          },
+          "Cooldown": "60",
+          "ScalingAdjustment": "1"
+        }
+      },
+      "WebServerScaleDownPolicy": {
+        "Type": "AWS::AutoScaling::ScalingPolicy",
+        "Properties": {
+          "AdjustmentType": "ChangeInCapacity",
+          "AutoScalingGroupName": {
+            "Ref": "WebServerGroup"
+          },
+          "Cooldown": "60",
+          "ScalingAdjustment": "-1"
+        }
+      },
+      "CPUAlarmHigh": {
+        "Type": "AWS::CloudWatch::Alarm",
+        "Properties": {
+          "AlarmDescription": "Scale-up if CPU > 90% for 10 minutes",
+          "MetricName": "CPUUtilization",
+          "Namespace": "AWS/EC2",
+          "Statistic": "Average",
+          "Period": "300",
+          "EvaluationPeriods": "2",
+          "Threshold": "90",
+          "AlarmActions": [
+            {
+              "Ref": "WebServerScaleUpPolicy"
+            }
+          ],
+          "Dimensions": [
+            {
+              "Name": "AutoScalingGroupName",
+              "Value": {
+                "Ref": "WebServerGroup"
+              }
+            }
+          ],
+          "ComparisonOperator": "GreaterThanThreshold"
+        }
+      },
+      "CPUAlarmLow": {
+        "Type": "AWS::CloudWatch::Alarm",
+        "Properties": {
+          "AlarmDescription": "Scale-down if CPU < 70% for 10 minutes",
+          "MetricName": "CPUUtilization",
+          "Namespace": "AWS/EC2",
+          "Statistic": "Average",
+          "Period": "300",
+          "EvaluationPeriods": "2",
+          "Threshold": "70",
+          "AlarmActions": [
+            {
+              "Ref": "WebServerScaleDownPolicy"
+            }
+          ],
+          "Dimensions": [
+            {
+              "Name": "AutoScalingGroupName",
+              "Value": {
+                "Ref": "WebServerGroup"
+              }
+            }
+          ],
+          "ComparisonOperator": "LessThanThreshold"
+        }
       }
+    
        
   },
   
@@ -205,6 +391,9 @@
        "DBServerSecurityGroupID" : {
             "Type" : "String"
         },
+        "LoadBalancerSecurityGroupID" : {
+            "Type" : "String"
+        },
         "DBUser" : {
           "Type" : "String"
         },
@@ -216,6 +405,27 @@
         },
         "TopicName": {
           "Type": "String"
+        },
+        "ParamVpcId" : {
+          "Type": "String"
+        },
+        "CertificateArn1" : {
+          "Type" : "String"
+        },
+        "LoadBalancerName" : {
+          "Type" :"String"
+        },
+        "TagKey": {
+          "Type": "String"
+        },
+        "TagValue": {
+          "Type": "String"
+        },
+        "HostedZoneId" : {
+          "Type" : "String"
+        },
+        "Name" : {
+          "Type" : "String"
         }
 
  }  

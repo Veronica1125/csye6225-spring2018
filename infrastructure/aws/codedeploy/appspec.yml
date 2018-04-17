@@ -8,9 +8,16 @@ files:
     destination: /home/ubuntu
   - source: ./build/libs/ROOT.war
     destination: /var/lib/tomcat8/webapps
+  - source: ./awslogs.conf
+    destination: /home/ubuntu
+  - source: ./restartawslogsservice.sh
+    destination: /home/ubuntu
 
 hooks:
   AfterInstall:
    - location: ./restartTomcat.sh
      timeout: 180
+     runas: ubuntu
+   - location: ./restartawslogsservice.sh
+     timeout: 300
      runas: ubuntu
